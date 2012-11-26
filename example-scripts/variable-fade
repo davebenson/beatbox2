@@ -1,0 +1,40 @@
+=instrument ps
+filter<compose<[noise, 0%, 1%]>, plucked_string_filter(frequency, falloff)>
+=instrument vps
+variable_fade<ps,
+              param_map<ps, frequency=frequency*2>,
+	      param_map<offset<gain<sin>>,
+                        param gdouble vibfreq 0.01 100 1,
+                        frequency=vibfreq,
+                        gain=0.5, offset=0.5>>
+=instrument rs
+param_map<vps,
+          param gdouble overtone 0.01 10 0.5,
+          vibfreq=frequency*overtone>
+=beats 100 90
+# =set gnuplot
+=part named foo instrument vps
+{falloff=0.1} {duration=5beats} _
+{vibfreq=2} a,
+{vibfreq=4} b,
+{vibfreq=6} c,
+{vibfreq=9} d,
+{vibfreq=12} e,
+{vibfreq=15} f,
+{vibfreq=18} g,
+{vibfreq=24} a,
+{vibfreq=30} b,
+{vibfreq=36} c,
+{vibfreq=48} d,
+{vibfreq=72} e,
+{vibfreq=144} f,
+{vibfreq=215} g,
+=part named boo instrument rs
+{falloff=0.1} {duration=5beats} _
+
+{overtone=1/4}
+a,c,a,e,a,ce,
+{overtone=1/3}
+a,c,a,e,a,ce,
+{overtone=1/2}
+a,c,a,e,a,ce,

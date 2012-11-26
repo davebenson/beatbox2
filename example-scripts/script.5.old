@@ -1,0 +1,8 @@
+=instrument test modulate<exp-decay,sin>
+=beats 100 90
+=part instrument test
+<notestep=0.125> acacececacacececacacecec
+<notestep=1> {duration=3beats} __ afaf
+=part instrument test
+<notestep=0> <commastep=0.125> ac,e,,,f,,ac,e,ac,e,,,f,,ac,e,ac,e,,,f,,ac,e,
+=write script.5.wav

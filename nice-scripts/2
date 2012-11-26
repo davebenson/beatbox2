@@ -1,0 +1,10 @@
+=instrument d0 reverse<modulate<sin, exp-decay>>
+=instrument n0 modulate<noise, adsr>
+=beats 100 90
+=macro D  d,d,d,{duration=3}b{duration=1},, 
+=part instrument d0 repeat 1
+<notestep=0> <commastep=0.25>
+@D _ @D _ @D _ @D
+=part instrument n0 repeat 5 at beat 0
+<notestep=0> <commastep=0.125> {duration=0.4} {attack_time=10} {release_time=60} {volume=0.1}
+,x,,x,,x,,x,,,

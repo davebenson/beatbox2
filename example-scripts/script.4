@@ -1,0 +1,15 @@
+=instrument warble2 modulate<                                            \
+                     vibrato<                                            \
+		      mix<                                               \
+		       param_map<constant,value=frequency>,              \
+		       modulate<                                         \
+		         param_map<constant, value=vibrato_depth>,       \
+			 param_map<sin, frequency=vibrato_freq>          \
+		       >                                                 \
+		      >                                                  \
+		     >,                                                  \
+		     adsr                                                \
+		    >
+=beats 100 90
+=part instrument warble2
+{duration=1beats} {vibrato_depth=100} {vibrato_freq=10} cececece

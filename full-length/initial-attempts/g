@@ -1,0 +1,113 @@
+
+=instrument weirdo
+modulate<param_map<adsr, attack_time=5%, sustain_level=1.00, release_time=5%>,
+         filter<compose<[noise, 0%, 1%]>,
+                plucked_string_filter(frequency, falloff, b),
+                iir_filter(double_array([0,1]), double_array([0.0999, 0.25, 0.1,0.25]))
+               >
+        >
+
+=instrument oscdrum
+modulate<param_map<exp-decay, halflife_time=40%>,
+         param_map<sin,
+	           param gdouble modulation_frequency 0 10000 10,
+		   frequency=modulation_frequency>,
+         sin>
+=instrument bassoon  param_map<fm, \
+                               frequency=5*frequency, \
+                               H=1/5, \
+                               max_depth=1.5, \
+                               envelope=exp_waveform(double_array([0,0, -1, .1,1, 0, .2,1, 0, .9,1, -3, 1,0]))>
+=beats 100 90
+=part instrument weirdo named weirdo
+{falloff=0.1} {b=0} {duration=3b} <notestep=0.0> <commastep=0.5>
+Mfirst_beat
+c..,,e,g,e,c,a,c,e,g.,_e^,c.,e_c^^a_,e,ce_a^,ac_e^,ec_c^,
+c_e^,a.^a_,c,e.g_c^,c^e__e^,,ce__g^^,,ca^a._,cea,,ge,,c,ac,e,ac,__g^^,__c^^,__e^^ge,e,,ac,a,e,c,ge,e,ca,ca,,,ae,ca,c,ea,c,,ege,ac,a,c,a,e,ca,e
+c..,,e,g,e,c,a,c,e,g.,_e^,c.,e_c^^a_,e,ce_a^,ac_e^,ec_c^,
+c..,,e,g,e,c,a,c,e,g.,_e^,c.,e_c^^a_,e,ce_a^,ac_e^,ec_c^,
+c,a,e,,g,a,,a,ce,,g,,e,a,,c,e,g,e,a,ca,ec,a,e,g,e,a,ca,ce,,
+Ma
+c..,,e,g,e,c,a,c,e,g.,_e^,c.,e_c^^a_,e,ce_a^,ac_e^,ec_c^,
+c..,,e,g,e,c,a,c,e,g.,_e^,c.,e_c^^a_,e,ce_a^,ac_e^,ec_c^,
+c..,,e,g,e,c,a,c,e,g.,_e^,c.,e_c^^a_,e,ce_a^,ac_e^,ec_c^,
+FADE{start_mark=first_beat,param=volume,start_value=1, end_value=0.1, interpolate=exponential}
+
+#a,,,c,,_c^,e,^c_,a,,c,,e,,g,a,,c,a,,GRACE{a}_c^,,g,e,,c,a,,g,e,c,a,c.e,,a,g,e,ac,,a,,c,,,GRACE{_g^} e,,a,c.,,ag,e,c,,a,c,e,
+=macro horrible_riff \
+a,c,a,V+^c_V-,a,c,a,^e_,a,c,a,^a_,a,c,a,_c^,e,c,e,a,V-e-V+,c,V-e-V+,a,V-e-V+,c,V-e-V+,a,
+=part instrument bassoon at mark first_beat named bass1
+<notestep=0> <commastep=0.5> {duration=1b}
+__
+@horrible_riff
+FADE{start_mark=first_beat,param=volume,start_value=0.05, end_value=0.4, interpolate=exponential, adjust=multiply}
+Mtmp
+@horrible_riff
+@horrible_riff
+FADE{start_mark=tmp,param=volume,start_value=0.4, end_value=0.05, interpolate=exponential, adjust=multiply}
+
+=part instrument oscdrum at mark first_beat named oscdrum
+__
+{duration=5b} <notestep=2> {volume=1.5}
+acacececacacegececaceacdcaceacacecac
+
+
+# TODO: find a real instrument for this part!
+# from 'tunez'
+=instrument adsrsin modulate<adsr,sin> 
+=macro sriff a,,b,,a,,c,,a,,d,,a,c,e,,a,d,f,,a,c+,f,,a,,d,,^a_,,a,c,a,,a,e,a,,ca,e,gc,e,ca,e,gc,e,^c_eg,c,
+=part instrument adsrsin at mark a named sriffbit
+<commastep=0.25> <notestep=0> {duration=0.5b} {attack_time=4%} {decay_time=10%} {sustain_level=0.50}
+_
+                @sriff @sriff
+Ma2
+<pitchshift=5>  @sriff @sriff
+<pitchshift=-7> @sriff @sriff
+Mb FADE{start_mark=a, param=attack_time, start_value=4%, end_value=50%}
+   FADE{start_mark=a, param=sustain_level, start_value=0.5, end_value=0.2}
+<pitchshift=7>  @sriff @sriff
+<pitchshift=5>  @sriff @sriff
+<pitchshift=0>  @sriff @sriff
+<pitchshift=0> 
+FADE{start_mark=b, param=attack_time, start_value=50%, end_value=4%}
+FADE{start_mark=b, param=sustain_level, start_value=0.2, end_value=0.5}
+
+
+=instrument mar
+param_map<gain<complex<modal,
+                       instrument("marimba"),
+		       frequency(frequency),
+		       damping(0),
+		        0% .. strike(1),
+		       10% .. damping(0.001),
+		       20% .. damping(0.01),
+		       30% .. damping(0.1),
+		       50% .. damping(0.2)>>,
+	  gain=1.9>
+=macro briff acacececacacfcfc
+=macro briff2 acacacac ecececec acacacac fcfcfcfc
+=macro briff2a ac^a_caca^c_ ec^e_cecec acac^a_cac fc^f_cfc^f_c
+=part instrument mar at mark a2 named sriffbit2
+{volume=0.2} <commastep=0.25> , <notestep=0.5>
+<pitchshift=5>    @briff @briff @briff
+<pitchshift=-7>   @briff2 @briff
+<pitchshift=7>    @briff @briff2a
+Mbass2
+<pitchshift=5>    @briff @briff @briff
+<pitchshift=0>    @briff2 @briff
+Mfadeout
+@briff2a
+FADE{start_mark=fadeout,param=volume,start_value=1, end_value=0.1, interpolate=exponential, adjust=multiply}
+
+=instrument horn     param_map<fm, \
+                               max_depth=5, \
+                               envelope=exp_waveform(double_array([0,0, -1, .2,1, -1, .3,0.812, 0, 0.8,0.758, -1, 1,0]))>
+=part instrument horn at mark bass2 named horn
+<notestep=0> <commastep=0.5> {duration=1b}
+__
+@horrible_riff
+FADE{start_mark=bass2,param=volume,start_value=0.1, end_value=0.7, interpolate=exponential}
+Mbass3
+@horrible_riff
+@horrible_riff
+FADE{start_mark=bass3,param=volume,start_value=0.7, end_value=0.1, interpolate=exponential}

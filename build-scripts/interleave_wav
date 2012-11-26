@@ -1,0 +1,21 @@
+#! /usr/bin/perl -w
+
+# Unrobustly take two mono .wav files and convert
+# them into a stereo .wav file on stdout.
+# Note that only wav files output by bb-run should
+# be used, as we don't really parse any headers,
+# we just assume they are exactly the standard bb wav file.
+ 
+open W0, "<$ARGV[0]" or die;
+open W1, "<$ARGV[1]" or die;
+
+read W0, $w0header, 44;
+read W1, $w1header, 44;
+substr($w0header, 22, 1, "\2");
+
+print $w0header;
+while ((read W0, $a, 2) == 2
+    && (read W1, $b, 2) == 2)
+    { print "$a$b"; $a=$b='' }
+
+

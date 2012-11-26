@@ -1,0 +1,5 @@
+=instrument ps filter<compose<[noise, 0, 0.01]>, plucked_string_filter(frequency, falloff)>
+=instrument ps2 filter<compose<[fade<noise,param_map<constant,value=0>> , 0%, 30%]>, plucked_string_filter(frequency, falloff)>
+=beats 100 90
+=part named foo instrument ps2
+{falloff=0.1} {duration=2beats} ace

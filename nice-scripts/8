@@ -1,0 +1,26 @@
+=beats 100 120
+=macro W c,,d,,c,,a,,g,,e,,a,,e,,d,,a,,c,,c,,e,,d,{volume=0},c,,e,,a,,f,,c,,f,,a,,,b,,,c,,,^f 
+=part instrument slide_whistle
+<notestep=0> <commastep=0.5> {frequency_change_mute=1}
+{frequency_change_rate=100}<pitchshift=5>                 {volume=0} ON {volume_change_rate=0.3} {volume=1} a,a+,b,c,c+,d,d+,e,f,f+,g,g+^aa+bcc+dd+eff+gg+^ OFF
+
+# play a whistle slightly offset from itself
+M0 {frequency_change_rate=200000}           {volume=0} ON {volume_change_rate=0.3} {volume=1} @W OFF
+J0 {frequency_change_mute=0} <pitchshift=5> {volume=0} ON {volume_change_rate=0.3} {volume=1} ,@W OFF
+
+=part instrument slide_whistle
+<notestep=0> <commastep=0.5> {frequency_change_mute=1} {frequency_change_rate=20000}
+Mstart
+{volume=0} ON {volume_change_rate=0.3} {volume=1} c,e-,,,g,c,,,g,c,,,a,e-,,,c,a,,,g,e-,,,c,e-,,,c,e-,,, {volume=0}g,a,,,e-,,,,a OFF
+Jstart
+{volume=0} ON {volume_change_rate=0.3} {volume=1} _,,,c,,,e-,g,,,,c,g,,,c,a,,,e-,c,,,a,g,,,e-,c,,,e-,c,,,e-,,,,, {volume=0}g,a,,,e-a^ OFF
+
+Mstart {frequency_change_rate=500}
+{volume=0} ON {volume_change_rate=0.3} {volume=1} c,e-,,,g,c,,,g,c,,,a,e-,,,c,a,,,g,e-,,,c,e-,,,c,e-,,, {volume=0}g,a,,,e-,,,,a OFF
+Jstart
+{volume=0} ON {volume_change_rate=0.3} {volume=1} _,,,c,,,e-,g,,,,c,g,,,c,a,,,e-,c,,,a,g,,,e-,c,,,e-,c,,,e-,,,,, {volume=0}g,a,,,e-a^ OFF
+
+Mstart {frequency_change_rate=300} {frequency_change_mute=0.3} {volume_change_rate=0.7}
+{volume=0} ON {volume_change_rate=0.3} {volume=1} c,e-,,,g,c,,,g,c,,,a,e-,,,c,a,,,g,e-,,,c,e-,,,c,e-,,, {volume=0}g,a,,,e-,,,,a OFF
+Jstart
+{volume=0} ON {volume_change_rate=0.3} {volume=1} _,,,c,,,e-,g,,,,c,g,,,c,a,,,e-,c,,,a,g,,,e-,c,,,e-,c,,,e-,,,,, {volume=0}g,a,,,e-a^ OFF

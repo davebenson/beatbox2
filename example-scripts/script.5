@@ -1,0 +1,12 @@
+=instrument nsin vibrato<                                         \
+                  mix<                                            \
+		   param_map<constant,value=frequency>,           \
+                   modulate<                                      \
+		    noise,                                        \
+	            param_map<constant,value=frequency_noise>     \
+		   >                                              \
+		  >                                               \
+		 >
+=beats 100 90
+=part instrument nsin
+{frequency_noise=10} ce {frequency_noise=20} ce {frequency_noise=40} ce {frequency_noise=80} cece {volume=0.3} c-e-c-e-c-e-

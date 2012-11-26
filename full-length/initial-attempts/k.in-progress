@@ -1,0 +1,160 @@
+=beats geometric 40 60 90
+=beats geometric 100 90 60
+=beats geometric 50 60 75
+=macro riff1     a,a,a,c,  GRACE{g,}e,,,a,    a,a,_g,e,     g,a,GRACE{c,}g....^,e...,    ,,,,
+=macro riff1a    a,c,e,c,  GRACE{c,}e,,,e,    a,e,_g,ea,    g,a,GRACE{e,}g....^,e...,    ,,,,
+=macro riff1b    a,a,a,c,  GRACE{a,c,}e,,,a,  c,a,_g,a,     c,a,GRACE{a,c,}g....^,e,    ,V-_c^V+,,,
+=macro bassline1 _c.,,,a, c.,g,,,c,e,c,,,e,c,e,..,e.c,,,^
+=macro bassline1a _c.e,,,ace, ac.e,g^ce_,,,ca_g^,,ceg,,,e,egc,ea_c^,..,_g^e.c,,,^
+=instrument modpiano1 
+modulate<param_map<mix<constant,gain<sin>>,
+                   param gdouble vibrato_freq 0 1000 6,
+                   param gdouble vibrato_depth 0 2 0,
+                   value=1,
+		   frequency=vibrato_freq,
+		   gain=vibrato_depth>,
+         piano1>
+=part instrument modpiano1 named first_piano
+{duration=3.0b} {release_time=0.3b} <notestep=0.0> <commastep=0.5>
+Ma
+<pitchshift=2>
+Mtmp @riff1 Jtmp @bassline1
+<pitchshift=7>
+Mtmp @riff1a Jtmp @bassline1a
+<pitchshift=12>
+Mb Mtmp @riff1b Jtmp @bassline1
+<pitchshift=5>
+Mtmp @riff1 Jtmp @bassline1a
+<pitchshift=10>
+Mtmp @riff1a Jtmp @bassline1
+<pitchshift=-2>
+Mtmp @riff1b Jtmp @bassline1a
+<pitchshift=3>
+Mtmp @riff1 Jtmp @bassline1
+FADE{param=vibrato_depth,start_mark=a, start_value=0, end_value=1}
+FADE{param=volume,start_value=1, end_value=0.1,start_mark=b}
+
+=instrument efrac modulate<exp-decay, fractal1>
+=part instrument efrac at mark b named fractal_drumbeat
+{c=10.285714} {duration=1.8b} <notestep=2><commastep=2>
+x,x,, x,x,, x,x,, x,x,, x,x,, 
+x,x,, x,x,, x,x,, x,x,, x,x,, 
+x,x,, x,x,, x,x,, 
+FADE{param=volume,start_value=0.1, end_value=0.9,start_mark=b}
+FADE{param=c,start_value=10.285714, end_value=10.289,start_mark=b}
+
+=instrument mar
+normalize<
+complex<modal,
+        frequency(frequency),
+        instrument("marimba"),
+        0%  .. strike(1),
+	90% .. damping(0.1)>
+>
+=part instrument mar named marimba at mark b
+{duration=0.3b} <notestep=0.0> <commastep=0.5> <dotbeats=0>
+<pause=0.125>
+<pitchshift=0>
+@riff1
+<pitchshift=5>
+@riff1
+<pitchshift=-2>
+@riff1
+FADE{param=volume,start_value=0.01, end_value=0.1,start_mark=b} {volume=0.1}
+<pitchshift=10>
+@riff1
+<pitchshift=-9>
+Mc @riff1 
+Jc <pitchshift=3> <pause=-0.125> V- @riff1b V+
+<pitchshift=8> {volume=0.2} @riff1
+Md _@riff1b _@riff1a _@riff1
+FADE{param=volume,start_value=0.1, end_value=0.01,start_mark=d}
+
+=instrument v
+normalize<
+filter<complex<
+        voice0,
+	frequency(frequency),
+	fm_frequency(frequency/2),
+	1%   ..   volume(0.1),
+	10%   ..   am_depth(0.3),
+	15%   ..   grain_noise(0),
+	16%   ..   grain_noise(0.04),
+	17%   ..   grain_noise(0),
+	20%   ..   fm_depth(0),
+	25%   ..   grain_noise(0),
+	26%   ..   grain_noise(0.04),
+	27%   ..   grain_noise(0),
+	30%   ..   am_depth(0),
+	30%   ..   volume(1),
+	35%   ..   grain_noise(0),
+	36%   ..   grain_noise(0.05),
+	37%   ..   grain_noise(0),
+	40%   ..   fm_depth(0.3),
+	30%   ..   volume(0.2),
+	45%   ..   grain_noise(0),
+	46%   ..   grain_noise(0.04),
+	47%   ..   grain_noise(0),
+	60%   ..   fm_depth(0),
+	60%   ..   volume(0.3),
+	65%   ..   grain_noise(0),
+	66%   ..   grain_noise(0.04),
+	67%   ..   grain_noise(0),
+	69%   ..   volume(0.15),
+	75%   ..   grain_noise(0),
+	76%   ..   grain_noise(0.1),
+	77%   ..   grain_noise(0),
+	85%   ..   grain_noise(0),
+	86%   ..   grain_noise(0.1),
+	87%   ..   grain_noise(0),
+	95%   ..   grain_noise(0),
+	96%   ..   grain_noise(0.1),
+	97%   ..   grain_noise(0),
+	100%  ..   volume(0.0)
+       >,
+   butterworth(BbButterworthMode::band_pass, frequency, 1, 0)
+>>
+
+=part instrument v named voice_drum_bassline at mark d
+{duration=1.0b} <notestep=0.0> <commastep=0.5> <dotbeats=0>
+<pitchshift=8> {volume=0.3}
+__
+@bassline1
+{volume=0.4} ^
+@bassline1 @bassline1
+{volume=0.4} ^
+@bassline1 @bassline1
+
+=part instrument v named voice_drum_refrain
+{duration=0.8b} <notestep=0.0> <commastep=0.25> <dotbeats=0>
+<pitchshift=8> {volume=0.5}
+@riff1
+^ @riff1a _
+@riff1b
+Me
+<pitchshift=3>
+@riff1
+{volume=0.2}
+@riff1a
+
+=part instrument modpiano1 at mark e named second_piano
+<pitchshift=3>
+{duration=3.0b} {release_time=0.3b} <notestep=0.0> <commastep=0.5>
+<pause=0.125>
+{volume=0.3} @riff1a
+{volume=0.4} @riff1
+<pause=-0.125>
+Mf
+<pitchshift=-2>
+{volume=0.5} @riff1
+{volume=0.6} @riff1b
+{volume=0.8} @riff1a
+
+=part instrument modpiano1 at mark f named second_piano_bassline
+<pitchshift=-2>
+{duration=3.0b} {release_time=0.3b} <notestep=0.0> <commastep=0.5>
+__
+{volume=.4}
+@bassline1
+{volume=.7}
+@bassline1a

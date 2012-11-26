@@ -1,0 +1,30 @@
+
+=instrument nfilter modulate<adsr, filter<noise, \
+                   butterworth(BbButterworthMode::band_pass, frequency, bandwidth, dbgain), \
+                   butterworth(BbButterworthMode::band_pass, frequency, bandwidth, dbgain), \
+                   > >
+=instrument sh complex<shaker, \
+                       instrument(BbShakerInstrumentType::big_rocks), \
+                       decay(1), \ 
+                       0.. shake(1000), \
+                       0.5.. shake(500), \
+                      >
+=beats 100 90
+=part instrument nfilter at beat 0
+{duration=1} {bandwidth=0.04} {dbgain=10} <notestep=0> <commastep=0.5>
+ca,e,g,a,a,c,e,g,e,,ca,c,e,,,^g_e,,g,e,a,c,a,cae,c,e,a, ,,,,,,,,,,,
+cae,ge,a,e,aca,e,g,e,g,ag,,a,^e_a,c,e,ca,ce,c,ae,c,,c,a,cedc,e,,c,ac,e,,ce,e,d,a,cd,,cc,ec,a,e,,d,c
+=part instrument sh at beat 0
+{duration=1} <notestep=0> <commastep=1>
+{volume=0.010} x,x,x,x,
+{volume=0.013} x,x,x,x,
+{volume=0.016} x,x,x,x,
+{volume=0.019} x,x,x,x,
+{volume=0.022} x,x,x,x,
+{volume=0.025} x,x,x,x,
+{volume=0.022} x,x,x,x,
+{volume=0.019} x,x,x,x,
+{volume=0.016} x,x,x,x,
+{volume=0.013} x,x,x,x,
+{volume=0.010} x,x,x,x,
+{volume=0.004} x,x,x,x,

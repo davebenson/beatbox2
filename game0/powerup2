@@ -1,0 +1,4 @@
+=instrument bz modulate<adsr, buzz>
+=beats 100 90
+=part instrument bz
+{duration=0.3s} <notestep=0.1s> {release_time=30%} ^^ac+e

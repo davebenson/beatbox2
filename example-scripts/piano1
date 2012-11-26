@@ -1,0 +1,17 @@
+=beats 100 90
+=macro riff ^a,b,a,b,a_f^,b,a,b,a^f_,d,a,b,a_f^,d,GRACE{f,}a,b,a_ce^,d,a^ce_,b,a,,
+=part instrument piano1 named piano
+{duration=3.0b} {release_time=0.3b} <notestep=0.0> <commastep=0.5>
+a
+,ce,ce,,a,ce,ce,,
+__
+a,ce,ce,,a,ce,ce,,
+^
+Ma
+{strike_velocity=0}
+___
+@riff
+@riff
+@riff
+@riff
+FADE{start_mark=a,param=duration,start_value=0.7b,end_value=2.5b}

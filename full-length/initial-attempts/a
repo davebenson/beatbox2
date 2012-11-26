@@ -1,0 +1,91 @@
+# this was nice-scripts/2 at one point
+=instrument d0 reverse<modulate<sin, exp-decay>>
+=instrument n0 modulate<noise, adsr>
+=instrument n1 modulate<noise, adsr>
+=instrument d1 modulate<exp-decay,sin>
+=instrument d2 modulate<adsr,sin>
+=instrument cy param_map<noise_filterer, filter=square_filter(2)>
+=instrument ps2 filter<compose<[fade<noise,param_map<constant,value=0>> , 0%, 30%]>, plucked_string_filter(frequency, falloff)>
+=beats 100 90
+=macro D  g,,g,,g,{duration=3b}c{duration=0.9b},,,
+=macro D2  ge-,,g,,gc,{duration=3b}ce-{duration=0.9b},,,
+=part named a instrument d0 repeat 1
+<notestep=0> <commastep=2> {duration=0.9b}
+             <pitchshift=0> @D _ @D _ @D _ @D ^^^
+{volume=0.6} <pitchshift=-4> @D _ @D _ @D _ @D ^^^
+{volume=0.7} <pitchshift=0> @D _ @D _ @D _ @D ^^^
+=part named b instrument d0 repeat 1
+<pause=16>
+{volume=0.8} <pitchshift=4> @D _ @D _ @D _ @D ^^^
+
+<notestep=0> <commastep=2> {duration=0.9b}
+{volume=0.1} <pitchshift=0> @D _ @D _ @D _ @D ^^^
+<pause=8>
+{volume=0.6} <pitchshift=0> @D2 _ @D ^ @D2 _ @D2 ^
+
+
+#=part instrument n0 repeat 1 at beat 0
+#<notestep=0> <commastep=0.125> {duration=0.4b} {attack_time=10} {release_time=60} {volume=0.1}
+#,x,,x,,x,,x,,,
+#{duration=0.3} {volume=0.2}
+#Ma
+#,x,,x,,x,,x,,,   ,x,,x,,x,,x,,,
+#,x,,x,,x,,x,,,   ,x,,x,,x,,x,,,
+#,x,,x,,x,,x,,,   ,x,,x,,x,,x,,,
+#{duration=0.1} {volume=0.4}
+#Ja
+#, ,,,x, ,, ,,,   , ,, ,, ,, ,,,
+#, ,,, , ,, ,,,   , ,, ,,x,, ,,,
+#, ,,,x, ,, ,,,   , ,, ,,x,, ,,,
+#, ,,, , ,, ,,,   , ,, ,,x,, ,,,
+=part instrument d2 repeat 1 at beat 0 named d2
+<notestep=0.125> <commastep=0.125> {duration=0.18b} {attack_time=1%} {decay_time=40%} {sustain_level=0.5} {release_time=10%} 
+__
+{volume=0.1} c,c,,cc, cc,,,c,c 
+{volume=0.2} c,c,,cc, cc,,,c,c 
+             c,c,,cc, cc,,,c,c 
+             cecec,c, cecec,c, 
+             c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   cecec,c, cecec,c, 
+{volume=0.3} c,,c,cc, cc,,,c,c   c,,c,cc, cc,,,c,c   c,,c,cc, cc,,,c,c   c,g,c,e, c,g,c,e, 
+{volume=0.4} c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   cecec,c, cecec,c, 
+             c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   cecec,c, cecec,c, 
+             cecgecc, cc,,,c,c   cgcegcc, cc,,,c,c   cecgecc, cc,,,c,c   cecec,c, cecec,c, 
+             c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   cecec,c, cecec,c, 
+             c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   cecec,c, cecec,c, 
+{volume=0.6} c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   cecec,c, cecec,c, 
+             cecgecc, cc,,,c,c   cgcegcc, cc,,,c,c   cecgecc, cc,,,c,c   cecec,c, cecec,c, 
+             c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   cecec,c, cecec,c, 
+             c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   cecec,c, cecec,c, 
+#=part instrument d1 repeat 1 at beat 0
+#<notestep=0.125> <commastep=0.125> {duration=10b}
+#{volume=0.1} ,,,,,,,,
+#{volume=0.4} ,a,,,,,,,,,,,,,,
+#{volume=0.3} ,c,,,,,,,,,,,,,,,e,,,,,,,,,,,,,,
+#{volume=0.3}^,c,,,,,,,,,,,,,,,e,,,,,,,,,,,,,,
+#{volume=0.1}^,c,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+=part instrument ps2 at beat 0 named ps2
+{falloff=0.1} {volume=0.005} <notestep=1> {duration=5b} ,,,,,,,c ,,,,,,,e ,,,,,,,a ,,,,,,,g {volume=0.01},,,,,,,e ,,,,,,,c ,,,,,,,a ,,,,,,,c
+                                                        e-,,,,,,c g,,,,,,e- a,,,,,,a g,,,,,,g {volume=0.02},,,,,,,e- c,,,,,,c a,,,,,,a c,,,,,,c
+          {falloff=0.2} {duration=6b}     {volume=0.03} e-,,,,,,c g,,,,,,e- a,,,,,,a g,,,,,,g {volume=0.02},,,,,,,e- c,,,,,,c a,,,,,,a c,,,,,,c
+          {falloff=0.2} {duration=6b}     {volume=0.03} e-,MT,,,,,c g,,,,,,e- a,,,,,,a g,,,,,,g {volume=0.02},,,,,,,e- c,,,,,,c a,,,,,,a c,,,,,,c
+# next this is like prior like, offset by a comma,pitchshift 
+          <pitchshift=4>   JT            {volume=0.01}  e-,,,,,,c g,,,,,,e- a,,,,,,a g,,,,,,g {volume=0.02},,,,,,,e- c,,,,,,c a,,,,,,a c,,,,,,c
+
+=part instrument d2 repeat 1 at part start b named d2_2
+<notestep=0.125> <commastep=0.125> {duration=0.18b} {attack_time=1%} {decay_time=40%} {sustain_level=0.5} {release_time=10%} 
+__
+{volume=0.1} c,c,,cc, cc,,,c,c 
+{volume=0.2} c,c,,cc, cc,,,c,c 
+             c,c,,cc, cc,,,c,c 
+             cecec,c, cecec,c, 
+             c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   cecec,c, cecec,c, 
+{volume=0.3} c,,c,cc, cc,,,c,c   c,,c,cc, cc,,,c,c   c,,c,cc, cc,,,c,c   c,g,c,e, c,g,c,e, 
+{volume=0.4} c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   cecec,c, cecec,c, 
+             c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   cecec,c, cecec,c, 
+             cecgecc, cc,,,c,c   cgcegcc, cc,,,c,c   cecgecc, cc,,,c,c   cecec,c, cecec,c, 
+             c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   cecec,c, cecec,c, 
+             c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   cecec,c, cecec,c, 
+{volume=0.6} c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   cecec,c, cecec,c, 
+             cecgecc, cc,,,c,c   cgcegcc, cc,,,c,c   cecgecc, cc,,,c,c   cecec,c, cecec,c, 
+             c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   cecec,c, cecec,c, 
+             c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   c,c,,cc, cc,,,c,c   cecec,c, cecec,c, 

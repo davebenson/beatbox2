@@ -1,0 +1,10 @@
+=beats 100 90
+=part instrument bowed
+_
+ON c {start_bowing:1} ,,
+ <notestep=0.25>ege_c^egec^e_ace
+ <notestep=0.2>g_e^c ea_c^ ege c^e_a g_e^c  
+ <notestep=0.15>edce cacg ace_e^ ceac
+ <notestep=0.1>edce cacg ace_e^ ceac
+ <notestep=0.15>ecdaca
+ <notestep=0.25>cecad,,c,{stop_bowing:} ,,,, OFF

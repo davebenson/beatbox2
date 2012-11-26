@@ -1,0 +1,14 @@
+=beats 100 90
+=part instrument grain1
+<notestep=0>
+Ma
+c,,d,,c,,e,g,e,ca,d,
+c,,d,,c,,e,g,e,ca,d,
+c,,d,,c,,e,g,e,ca,d,
+c,,d,,c,,e,g,e,ca,d,
+c,,d,,c,,e,g,e,ca,d,
+c,,d,,c,,e,g,e,ca,d,
+c,,d,,c,,e,g,e,ca,d,
+
+#FADE{start_mark=a, param=noise_halflife_time, start_value=0.02s, end_value=0.1s}
+FADE{start_mark=a, param=resonance_halflife_time, start_value=0.02s, end_value=0.3s}

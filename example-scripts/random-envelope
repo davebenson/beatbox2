@@ -1,0 +1,21 @@
+=beats 100 90
+=instrument test modulate<adsr, sin, random_envelope>
+=instrument test2
+modulate<adsr,
+         random_envelope,
+	 modulate<param_map<constant,value=frequency>,
+		  mix<param_map<constant,value=1>,
+		      param_map<random_envelope,min_value=-modfreq_level,max_value=modfreq_level>
+		     >
+		 >
+	>
+=part instrument test
+Ma
+abcdefg
+abcdefg
+abcdefg
+abcdefg
+abcdefg
+abcdefg
+FADE{param=n_times, start_mark=a, start_value=0, end_value=100}
+

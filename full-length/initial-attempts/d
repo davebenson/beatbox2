@@ -1,0 +1,163 @@
+=beats 100 100
+
+=instrument p
+compose<[modulate<exp-decay, sin>, 0%, 100%],
+        [param_map<gain<noise>,gain=0.01>, 0%, 1%]>
+
+=instrument bells
+complex<shaker,
+        instrument(BbShakerInstrumentType::sleigh_bells),
+	0% .. shake(1000)>
+=instrument mar
+param_map<gain<complex<modal,
+                       instrument("marimba"),
+		       frequency(frequency),
+		       damping(0),
+		        0% .. strike(1),
+		       10% .. damping(0.001),
+		       20% .. damping(0.01),
+		       30% .. damping(0.1),
+		       50% .. damping(0.2)>>,
+	  gain=1.9>
+
+=instrument strange_cymbal param_map<noise_filterer, filter=square_filter(2)>
+
+# standard waltzy riff
+=macro wriff0   V+c.V-,eg,eg, V+c.V-,eg,eg, \
+                V+^c._V-,eg,eg, V+^c._V-,eg,eg, \
+                V+^c._V-,e_e^,e_e^, V+^c._V-,e_e^,e_e^, \
+                V+^c._V-,e^a_,e^a_, V+^c._V-,e^a_,e^a_,
+
+# melodic riffs
+=macro wriff1   V+ c V-,e.,g,  V+ c V-,_a^e.,g,   V+cV-,g,^a_e.,  V+cV-,g,ae.,  \
+                V+a.V-,c,_e^e, V+a.V-,c,^e_e, V+a.V-,_c^,_e^e, V+a.V-,_c^,^e_e, 
+=macro wriff2   V+cV-,d,e,  V+cV-,d,e,  V+cV-,f,a, V+cV-,f,a, \
+                V+cV-,e,g,  V+cV-,e,g,  V+cV-,e,a, V+cV-,e,a,
+=macro wriff2voldown   cV-,d,e,  cV-,d,e,  cV-,f,a, cV-,f,a,
+
+# wriff3 works nice as a segue into wriff0
+=macro wriff3   V+cV-,_c^,_c^,  V+cV-,_e^,_e^,  V+eV-,_c^,_c^, V+eV-,_g^,_g^, \
+                V+gV-,_g^,_g^,  V+dV-,_g^,_g^,  V+dV-,a,a, V+cV-,a,a,
+
+=macro wriffx   V+xV-,,, x,,, x,,, x,,, 
+
+# wriff4 is actually a baseline; meant to be played at double-speed
+# over other stuff.
+# XXX: we really need a nice way to fade in and out.
+=macro wriff4volup \
+{volume=0.1} V+cV-,e,c,e,c,e, \
+{volume=0.2} V+cV-,^e_,c,^e_,c,^e_, \
+{volume=0.3} V+gV-,^e_,g,^e_,g,^e_, \
+{volume=0.4} V+gV-,^c_,g,^c_,g,^c_, \
+{volume=0.5} V+eV-,^c_,e,^c_,e,^c_, \
+{volume=0.6} V+eV-,g,e,g,e,g, \
+{volume=0.7} V+cV-,g,c,g,c,g,
+=macro wriff4 \
+             V+cV-,e,c,e,c,e, \
+             V+cV-,^e_,c,^e_,c,^e_, \
+             V+gV-,^e_,g,^e_,g,^e_, \
+             V+gV-,^c_,g,^c_,g,^c_, \
+             V+eV-,^c_,e,^c_,e,^c_, \
+             V+eV-,g,e,g,e,g, \
+             V+cV-,g,c,g,c,g,
+=macro wriff4voldown \
+{volume=0.7} V+cV-,e,c,e,c,e, \
+{volume=0.6} V+cV-,^e_,c,^e_,c,^e_, \
+{volume=0.5} V+gV-,^e_,g,^e_,g,^e_, \
+{volume=0.4} V+gV-,^c_,g,^c_,g,^c_, \
+{volume=0.3} V+eV-,^c_,e,^c_,e,^c_, \
+{volume=0.2} V+eV-,g,e,g,e,g, \
+{volume=0.1} V+cV-,g,c,g,c,g,
+# wriff test blocks
+#=part instrument p
+#{duration=0.5b} <notestep=0.0> <commastep=0.5>
+#@wriff0 ,,,
+#@wriff0 ,,,
+#@wriff0 ,,,
+#@wriff0 ,,, ,,,
+#=part instrument p
+#{duration=0.5b} <notestep=0.0> <commastep=0.5>
+#@wriff1 ,,,
+#@wriff1 ,,,
+#@wriff1 ,,,
+#@wriff1 ,,, ,,,
+#=part instrument p
+#{duration=0.5b} <notestep=0.0> <commastep=0.5>
+#@wriff2 ,,,
+#@wriff2 ,,,
+#@wriff2 ,,,
+#@wriff2 ,,, ,,,
+#=part instrument p
+#{duration=0.5b} <notestep=0.0> <commastep=0.5>
+#@wriff3 ,,,
+#@wriff3 ,,,
+#@wriff3 ,,,
+#@wriff3 ,,, ,,,
+
+# The Song.
+=part instrument p named first_part
+{duration=2b} <notestep=0.0> <commastep=1.0>
+@wriff0 MA
+@wriff0
+
+=part instrument p at mark A named first_part_continued
+{duration=2b} <notestep=0.0> <commastep=0.5>
+^
+@wriff1
+<pitchshift=5> @wriff1
+<pitchshift=0> @wriff2
+<pitchshift=5> @wriff2
+<pitchshift=0> @wriff1
+MB
+<pitchshift=0> @wriff3
+<pitchshift=0> @wriff0
+<pitchshift=0> @wriff1
+<pitchshift=5> @wriff1
+MC
+
+=part instrument strange_cymbal at mark B named strange_cymbal
+<commastep=1.5>
+<notestep=0.0> {duration=5b} {prepasses=0} {repeat_count=60} {falloff=0.1}
+{volume=0.01} @wriffx
+{volume=0.02} @wriffx
+{volume=0.03} @wriffx
+{volume=0.04} @wriffx
+{volume=0.03} @wriffx
+{volume=0.015} @wriffx
+
+=part instrument p at mark C named more_p
+{duration=2b} <notestep=0.0> <commastep=1.0>
+<pitchshift=5>
+@wriff0
+MD
+<pitchshift=0>
+@wriff0
+<pitchshift=-5> @wriff0
+<pitchshift=-12> @wriff3
+<pitchshift=0> @wriff0
+ME
+@wriff1
+@wriff0
+@wriff2voldown
+
+=part instrument mar at mark D named marimba
+{duration=1b} <notestep=0.0> <commastep=0.5>
+{volume=2}
+@wriff4volup
+#note: first wriff0 in prior part is playing,
+<pitchshift=-5> @wriff4
+{volume=0.8} <pitchshift=0> @wriff4
+{volume=0.7} <pitchshift=0> @wriff4
+<pitchshift=0> @wriff4voldown
+
+=part instrument bells at part end strange_cymbal named bells
+<commastep=1> <notestep=0>
+{volume=0.1} @wriffx
+{volume=0.2} @wriffx
+{volume=0.3} @wriffx
+{volume=0.4} @wriffx
+{volume=0.4} @wriffx
+{volume=0.4} @wriffx
+{volume=0.3} @wriffx
+{volume=0.2} @wriffx
+{volume=0.1} @wriffx

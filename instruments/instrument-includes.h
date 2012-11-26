@@ -1,0 +1,11 @@
+#include <math.h>
+#include <string.h>
+#include "../core/bb-error.h"
+#include "../core/bb-duration.h"
+#include "../core/bb-parse.h"
+#include "../core/bb-utils.h"
+#include "../core/bb-init.h"
+#include "../core/bb-types.h"
+#include "../core/macros.h"
+#include "../core/bb-instrument.h"
+#include "../core/bb-instrument-multiplex.h"

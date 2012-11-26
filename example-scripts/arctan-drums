@@ -1,0 +1,16 @@
+=instrument adr filter<gain<modulate<sin,exp-decay>>, arctan_filter()>
+=beats 100 90
+=part instrument adr
+<commastep=4><notestep=0>
+#Ma
+#c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,c,
+#FADE{start_mark=a, param=gain, interpolate=exponential, start_value=1, end_value=10000}
+<commastep=0.5>
+Mb
+a,c,e,g,e,c,a,ce,,,ge,,c,a,c,e,ac,e,ca,,ae,e,c,ae,
+FADE{start_mark=b, param=gain, interpolate=exponential, start_value=1, end_value=10000}
+FADE{start_mark=b, param=volume, interpolate=exponential, start_value=1, end_value=0.06}
+Mc
+a,ce,,e,,,ga,ge,a,c,e,c,e,g,ag,e,ac,,e,g,e,a,g,e,ag,aec,a,ce,
+FADE{start_mark=c, param=gain, interpolate=exponential, start_value=10000, end_value=1}
+FADE{start_mark=c, param=volume, interpolate=exponential, start_value=0.06, end_value=1}

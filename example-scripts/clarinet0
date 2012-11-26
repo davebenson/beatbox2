@@ -1,0 +1,4 @@
+=beats 100 90
+=part instrument clarinet
+_
+ON a {start_blowing:0.3, 5} c,,,e,,g,,c,,e,,g,,c,,e,,g,c,e,g,c,e,g,c,e,g,cegcegceg {stop_blowing:1},,,, OFF

@@ -1,0 +1,25 @@
+#! /bin/sh
+
+if test -z "$OUTPUT_DIR" ; then
+  dir=.
+else
+  dir="$OUTPUT_DIR"
+fi
+
+# TODO: use mp3info2 if it exists.
+test -z "$mp3id" && mp3id=mp3id
+
+for a in full-length/*/* ; do
+  test -d $a && continue
+  test -r $a || continue
+  echo $a | grep -q CVS && continue
+
+  base=`echo $a | sed -e 's/full-length\\///'`
+  album=`echo $base | sed -e 's/\\/.*//'`
+  song=`echo $base | sed -e 's/.*\\///'`
+  base_uc=`echo $base | perl -pe 's/[^a-zA-Z0-9]+/_/g; s/_$//;'`
+  ./bb-run -o $base_uc.wav $a
+  lame -b 192 $base_uc.wav $dir/$base_uc.mp3
+  rm -f $base_uc.wav
+  $mp3id -a 'dave benson' -l "$album" -t "$song" $dir/$base_uc.mp3
+done

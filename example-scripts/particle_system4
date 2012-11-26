@@ -1,0 +1,35 @@
+=instrument partsys
+normalize<
+particle_system<param gdouble frequency 1 20000 440,
+		param BbDuration rht seconds 0.03,
+		param BbDuration nht seconds 0.03,
+                param BbDuration duration beats 1,
+                grain_param [gdouble energy 0 1 0] param_map<exp-decay, halflife_time=10%>,
+                grain [param_map<gain<exp-decay>,gain=0.01, halflife_time=10%>]
+		      param_map<grain0,
+                                param BbDuration rht seconds 0.03,
+                                param BbDuration nht seconds 0.03,
+		                noise_halflife_time=nht, resonance_halflife_time=rht, frequency=frequency>
+               >
+>
+=instrument partsysps
+normalize<
+param_map<gain<filter<compose<[partsys, 0%, 30%]>, plucked_string_filter(frequency, 0.001, 0)>>, gain=0.05>
+>
+=beats 100 90
+=part instrument partsys
+{nht=0.03s} {rht=0.01s}
+_a,_c^,a,e,^
+{nht=0.03s} {rht=0.03s}
+_a,_c^,a,e,^
+{nht=0.03s} {rht=0.1s}
+_a,_c^,a,e,^
+
+#=part instrument partsys
+#{duration=0.5b} <notestep=0> <commastep=0.25>
+#ac,,e,,f,ac,e,ga,ce,,ac,,a,ce,,c,,a,,
+#
+#=part instrument partsysps
+#{duration=2b} <notestep=0> <commastep=0.25>
+#ac,,e,,f,ac,e,ga,ce,,ac,,a,ce,,c,,a,,
+#

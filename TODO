@@ -1,0 +1,49 @@
+- beats:
+  - test code for harmonic, linear, geometric, etc plus tests
+    going from beats=>seconds, seconds=>beats, beats=>beat-periods.
+  - beats_linear should be made into beats linear;
+    support for harmonic and geometric.
+- BUG: why are there extra dots on the bottom for
+  the main display when ./bb-analyze example-scripts/test-bow
+- particle system:
+  - grain-instrument parameters should filter out too,
+    instead of needing to explicitly define them.
+  - figure out why envelope of grain0==grain1 is so much
+    shorter than expected (hint: probably the noise gets filtered to its average quickly).
+  - perhaps the noise should have its average (after enveloping) subtracted.
+  - random_instrument: discrete distribution of instruments
+    - define subparameter semantics
+      - just like any container
+- brownian motion instrument
+- defined-by-points bezier waveforms for enveloping
+- documentation of the score-string format would be nice
+- finish: way to start playing at non-first-beat
+  - need to actual use the note filters in 'render'
+  - need command-line options:
+    --{start,end}-{beat,part,mark}=VALUE
+    --guess-{start,end}-time
+    --max-note-length=SECONDS
+    (these need to add note-filters and set the start/end times)
+- fix fm_drum
+- random chord generator to use as a baseline
+- <autoduration=1> for legato
+- other param tweaks:
+  - noise_filterer::falloff should be halflife_time [XXX: this is pretty confusing]
+
+more ridiculous:
+- proper instrument classes, instead of 'data' and 'free_data'
+- some way to represent (1/duration) as a param (ie a unit of frequency)
+- BbPrograms could be optionally able to tell input and output types
+- get rid of "parts"; strings should be able to change instruments.
+- non-lazy function invocation
+- casting?
+  - would need to be in bb_function_choose()
+    and anyone that uses it (right now, just lazy functions)
+- eliminate special, in favor of stack-frames (bb_vm_push_stack etc)
+
+write to stk authors:
+ - ModalBar does not use "mode volumes": they are overwritten by setStrikePosition()
+
+portability?
+ - do we care?
+ - log2 is used here-and-there.

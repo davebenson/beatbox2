@@ -1,0 +1,135 @@
+=instrument sl
+complex<slide_whistle,
+	frequency(frequency),
+	volume_change_rate(1),
+	frequency_change_rate(frequency*2),
+	volume(0),
+	 0% .. volume(1),
+	72% .. frequency(frequency*2),
+	80% .. volume_change_rate(6),
+	81% .. volume(0)
+	>
+=instrument nfilter
+filter<noise,
+       butterworth(BbButterworthMode::band_pass, frequency, 0.04, 10),
+      >
+=instrument d0
+compose<[modulate<exp-decay, sin>, 0%, 100%]>
+=instrument d1
+compose<[modulate<exp-decay, sin>, 0%, 100%],
+        [param_map<gain<noise>,
+	 param double noise_gain 0 1 0.1,
+	 gain=noise_gain>, 0%, 1%]>
+=instrument maraca
+complex<shaker,
+        instrument(BbShakerInstrumentType::maraca),
+        0% .. shake(1000) >
+
+# I think pn being pink_noise is almost always
+# between, but there's some strange sounds if !pink_noise.
+###=instrument pn param_map<gain<pink_noise>, gain=2>
+=instrument pn param_map<gain<noise>,gain=1>
+
+=instrument ps filter<compose<[pn, 0%, 1%]>, plucked_string_filter(frequency, falloff)>
+=instrument psn filter<compose<[pn, 0%, 1%]>, plucked_string_filter(frequency, falloff, b)>
+=beats 300 60
+
+# riff0 contains 8 commas.
+# riff1 contains 8 commas.
+# riff2 contains 12 commas.
+=macro riff0 a,e,,c,c,f^a_.,c,e,f.,a..c,,e,g,c.,a,
+=macro riff1 a...e..c.,_c^,e.V-g,_g^V+,^a.c_,_c^e,ge,c,
+=macro riff2 f.a,c,e,ac.,,e_e^,cg,,a,g,ac,ge.,
+
+=part instrument sl repeat 3
+<notestep=0>
+{volume=0.50} {duration=2.2b} a,,e,,c,,e,,
+
+=part named first instrument ps
+<notestep=0> <commastep=0.25> {falloff=0.1} {volume=0.45}
+<pitchshift=4>   {duration=3b}    @riff0 @riff1
+Ma
+<pitchshift=0>  {duration=2.0b} @riff0 @riff1
+<pitchshift=0>  {duration=1.8b}  @riff0 @riff1
+Mb
+_
+<pitchshift=0>  {duration=1.5b}  {volume=0.40} @riff0 {volume=0.35} @riff0
+<pitchshift=0>  {duration=1.0b}  {volume=0.30} @riff0 {volume=0.30} @riff0
+{volume=0.20} @riff0 {volume=0.05} @riff0
+
+=part instrument sl at mark a 
+<notestep=0>
+{volume=0.30} {duration=2.2b} a,,e,,c,,e,,
+{volume=0.35} {duration=1.8b} a,,e,,c,,e,,
+{volume=0.30} {duration=2.0b} a,,e,,c,,e,,
+{volume=0.25} {duration=2.2b} a,,e,,c,,e,,
+=part instrument d0 at mark a
+<notestep=0> <commastep=0.5> {duration=4b}
+@riff0 @riff2 @riff2 @riff1
+=part instrument d1 
+<notestep=0> <commastep=0.5> {duration=4b}
+@riff0
+{noise_gain=0.04} <pitchshift=-4> @riff0
+{noise_gain=0.06} <pitchshift=4> @riff1
+Mc
+{noise_gain=0.08} <pitchshift=0> @riff0
+{noise_gain=0.10} {volume=0.8} @riff0
+{noise_gain=0.05} {volume=0.6} @riff2
+=part instrument bowed named bow
+# set dotbeats=0 to suppress warnings about dots.
+<dotbeats=0>
+<notestep=0> <commastep=0.5>
+{volume=1}
+ON {start_bowing:1} @riff0 {stop_bowing:} , OFF ,
+{volume=1.2}
+ON {start_bowing:1} @riff1 {stop_bowing:} , OFF ,
+Md
+{volume=1.0}
+ON {start_bowing:1} @riff2 {stop_bowing:} , OFF ,
+{volume=0.8}
+ON {start_bowing:1} @riff1 {stop_bowing:} , OFF ,
+{volume=0.5}
+ON {start_bowing:1} @riff0 {stop_bowing:} , OFF ,
+{volume=0.1}
+ON {start_bowing:1} @riff0 {stop_bowing:} , OFF ,
+
+=part instrument shaker at mark c
+<notestep=0>
+{instrument=BbShakerInstrumentType::big_rocks}
+<commastep=2> , <commastep=4>
+{volume=0.1} ON {shake:1000} , OFF
+{volume=0.2} ON {shake:1000} , OFF
+{volume=0.3} ON {shake:1000} , OFF
+{volume=0.4} ON {shake:1000} , OFF
+{volume=0.6} ON {shake:1000} , OFF
+{volume=0.3} ON {shake:1000} , OFF
+{volume=0.1} ON {shake:1000} , OFF
+
+=part instrument d1 at mark d
+
+<notestep=0> <commastep=0.5>
+{volume=0.10} {noise_gain=0.09} @riff0 ,,
+{volume=0.15} {noise_gain=0.07} @riff1 ,,
+{volume=0.20} {noise_gain=0.05} @riff2 ,,
+{volume=0.25} {noise_gain=0.04} @riff1 ,,
+Me
+{volume=0.22} {noise_gain=0.03} @riff2 ,,
+{volume=0.20} {noise_gain=0.02} @riff0 ,,
+
+=part instrument psn at mark e
+{falloff=0.1} {duration=2b} {b=0.001}
+<notestep=0> <commastep=0.25>
+@riff0 @riff1 @riff1 @riff2 _ <pitchshift=5> @riff2 <pitchshift=0> @riff2
+@riff0
+<pitchshift=-5>@riff0
+FADE{param=b, interpolate=linear, adjust=replace, start_mark=e, start_value=0.0005, end_value=0.0}
+{b=0}
+Mf
+<pitchshift=0>@riff0 @riff0
+<pitchshift=5>@riff0
+@riff0
+FADE{param=volume, interpolate=exponential, adjust=multiply, start_mark=e, start_value=0.1, end_value=1.0}
+
+=part instrument sl at mark f repeat 1
+<notestep=0>
+{volume=0.50} {duration=2.2b} a,,e,,c,,e,,

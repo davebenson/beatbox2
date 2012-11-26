@@ -1,0 +1,15 @@
+=instrument ps filter<compose<[noise, 0%, 1%]>, plucked_string_filter(frequency, falloff, b)>
+=beats 100 90
+# =set gnuplot
+=part named foo instrument ps
+{falloff=0.1} {duration=2beats} {b=0.000} ace
+{falloff=0.1} {duration=2beats} {b=0.001} ace
+{falloff=0.1} {duration=2beats} {b=0.002} ace
+{falloff=0.1} {duration=2beats} {b=0.003} ace
+{falloff=0.1} {duration=2beats} {b=0.004} ace
+{falloff=0.1} {duration=2beats} {b=0.005} ace
+{falloff=0.1} {duration=2beats} {b=0.006} ace
+{falloff=0.1} {duration=2beats} {b=0.007} ace
+{falloff=0.1} {duration=2beats} {b=0.008} ace
+{falloff=0.1} {duration=2beats} {b=0.009} ace
+{falloff=0.1} {duration=2beats} {b=0.010} ace

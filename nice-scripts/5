@@ -1,0 +1,7 @@
+=instrument nfilter modulate<adsr, filter<noise, \
+                   butterworth(BbButterworthMode::band_pass, frequency, bandwidth, dbgain), \
+                   butterworth(BbButterworthMode::band_pass, frequency, bandwidth, dbgain), \
+                   > >
+=beats 100 120
+=part instrument nfilter
+{duration=10} {bandwidth=0.04} {dbgain=10} <notestep=12> _c _cac ^e-^ccc

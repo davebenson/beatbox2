@@ -1,0 +1,35 @@
+=instrument nfade modulate<fade<noise,param_map<constant,value=1>>, adsr, sin>
+=instrument warble modulate<param_map<sin,frequency=warble>, adsr, sin>
+=instrument test modulate<exp-decay,sin>
+=instrument ntick modulate<adsr, noise>
+=instrument ps filter<compose<[noise, 0, 0.01]>, plucked_string_filter(frequency, falloff)>
+=macro xs xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,  
+=macro q  c,_e^,c,_g^,^a_,^c_,__a^^,,e,,,,,,a,,g,,,,,,e,,e,,,,,,a,,
+=beats 100 90
+=part instrument ntick 
+{volume=0.15} {duration=0.05} <notestep=0.125> <commastep=0.125>
+{attack_time=0.3} {decay_time=0.3} @xs
+{attack_time=0.4} {decay_time=0.4} @xs
+{attack_time=0.1} {decay_time=0.1} @xs
+{attack_time=0.1} {decay_time=0.1} @xs
+
+=part instrument warble at beat 0
+{warble=10} {duration=2} <notestep=2> __cecg cecg cecg cecg <notestep=1> c_c^e_e^c_c^g_g^
+
+=part instrument ps at beat 0
+<notestep=0.0> <commastep=0.25> _
+{falloff=0.1} {duration=1}                @q
+<pitchshift=5> {duration=1.5}		  @q
+<pitchshift=-7>	 {duration=2.0}		  @q
+<pitchshift=12>	 {duration=2.5}		  @q
+<pitchshift=17>	 {duration=3.5}		  @q
+
+=part named foo instrument ps
+Mstart
+{falloff=0.1} {duration=3} <notestep=0.0> <commastep=0.25>
+<pitchshift=17>	 {duration=3.5}		  @q
+
+Jstart
+<commastep=0.125>,<commastep=0.25> <pitchshift=5>{volume=0.4} {falloff=0.9} {duration=12}
+  c,_e^,c,{volume=0.2}_g^,^{volume=0.4}a,^c_,__a^^,,e,,,,,,a,,g,{volume=0.7},,,,,e,,e,,,,,,a,, 
+

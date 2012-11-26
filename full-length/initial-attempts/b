@@ -1,0 +1,106 @@
+# this was nice-scripts/7 at one point
+=instrument silence param_map<constant,value=0>
+=instrument nfade
+modulate<fade<param_map<gain<mix<noise,constant>>,value=0,gain=1>,param_map<constant,value=1>>,
+	 adsr,
+	 vibrato<param_map<mix<constant, fade<gain<sin>,silence>>, value=frequency, frequency=modfrequency, gain=moddepth>>
+	>
+=instrument nfade2 modulate<fade<param_map<gain<mix<noise,constant>>,value=4,gain=0.2>,param_map<constant,value=1>>, sin>
+=instrument warble modulate<param_map<sin,frequency=warble>, adsr, sin>
+=instrument test modulate<exp-decay,sin>
+=instrument ntick modulate<adsr, noise>
+=instrument ps filter<compose<[noise, 0%, 1%]>, plucked_string_filter(frequency, falloff)>
+=instrument psnfade filter<compose<[nfade, 0%, 50%]>, plucked_string_filter(frequency, 0.03)>
+=instrument cy param_map<noise_filterer, filter=square_filter(2)>
+=macro xs xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,  
+=macro cs ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc,  
+=macro q  c,_e^,c,_g^,^a_,^c_,__a^^,,e,,,,,,a,,g,,,,,,e,,e,,,,,,a,,
+=macro q2  c,_e-^,c,_g^,^a_,^c_,__a^^,,e-,,,,,,a,,g,,,,,,e-,,e-,,,,,,a,,
+=long_macro q3
+   c,^e_,c,g,_a^,_c^,^^e__,,a,,,,,,g,,c,,,,,,^e_,,e,,,,,,a,,
+   ,,e,,_g,e-,,,,c,e-,g,^a__c^e,c^,e,g,c,e,_g^,^a_,_e,g,,a,,e^c_,
+   e,^e_,a,_ce^,^a_,_e^c^g_,_g^a,c,a,e,,,,e,a,c,e^g,,,,e,a,c,g,c,e,g,c,a,^e_,g,,e,,ac__e^^,,f,a,c
+   ,,,,,,ac__e^^,,f,a,c,,,,,,ac__e^^,,f,a,c,,c,e,g,^a_,c,^e_,c
+=beats 100 90
+=part instrument ntick named ntick
+{volume=0.15} {duration=0.05b} <notestep=0.125> <commastep=0.125>
+{attack_time=30%} {decay_time=30%} @xs
+{attack_time=40%} {decay_time=40%} @xs
+{attack_time=10%} {decay_time=10%} @xs
+{attack_time=10%} {decay_time=10%} @xs
+{attack_time=20%} {decay_time=10%} {sustain_level=0.5} @xs
+
+=part instrument warble at beat 0 named warble
+{warble=10} {duration=2b} <notestep=2> __cecg cecg cecg cecg <notestep=1> c_c^e_e^c_c^g_g^
+
+=part instrument ps at beat 0 named ps
+<notestep=0.0> <commastep=0.25> _
+{falloff=0.1}    {duration=1b}                @q
+<pitchshift=5>   {duration=1.5b}		  @q
+<pitchshift=-7>	 {duration=2.0b}		  @q
+<pitchshift=12>	 {duration=2.5b}		  @q
+<pitchshift=17>	 {duration=3.5b}		  @q
+
+=part named foo_a instrument ps
+{falloff=0.1} {duration=3b} <notestep=0.0> <commastep=0.25> _
+<pitchshift=17>	 {duration=3.5b}		  @q
+
+=part named foo_b instrument ps at part start foo_a
+<commastep=0.125>,<commastep=0.25> <pitchshift=5>{volume=0.4} {falloff=0.9} {duration=12b}
+  c,_e^,c,{volume=0.2}_g^,^{volume=0.4}a,^c_,__a^^,,e,,,,,,a,,g,{volume=0.7},,,,,e,,e,,,,,,a,, ,,
+
+=part named part_2 instrument ps
+<notestep=0.0> <commastep=0.25> _
+{falloff=0.1} {duration=1b}         @q
+<pitchshift=5> {duration=1.5b}	@q
+<pitchshift=-7>	 {duration=2.0b}	@q
+<pitchshift=12>	 {duration=2.5b}	@q
+<pitchshift=17>	 {duration=3.5b}	@q
+
+#=part instrument cy at part start part_2
+#{repeat_count=40} <notestep=0.0> <commastep=1> ,x,,,x,,,,x,,,,x,,,x
+
+=part named part_3 instrument ps at part end part_2
+<notestep=0.0> <commastep=0.25> _
+{falloff=0.1} {duration=1b}                @q
+<pitchshift=5> {duration=1.5b}		  @q
+<pitchshift=-7>	 {duration=2.0b}		  @q
+
+=part instrument ntick at part start part_2 named ntick_2
+{volume=0.15} {duration=0.05b} <notestep=0.125> <commastep=0.125>
+{attack_time=10%} {decay_time=30%}                    @xs
+{attack_time=10%} {decay_time=30%} {sustain_level=0.4} @xs
+{attack_time=4%}  {decay_time=20%} {sustain_level=0.35} @xs
+{attack_time=2%}  {decay_time=15%} {sustain_level=0.20} @xs
+
+=part instrument psnfade at part end part_3 named psnfade
+{attack_time=2%} {decay_time=15%} {sustain_level=1.00} {release_time=20%}
+{volume=0.1} {duration=1.5b} <notestep=0.0> <commastep=0.26> {moddepth=10} {modfrequency=12}
+_ @q ,,,, <pitchshift=-5> <commastep=0.27> @q ,,,, <commastep=0.30> <pitchshift=-12> @q
+
+#=part instrument ps named part_4
+#<notestep=0.0> <commastep=0.35> _
+#{falloff=0.13} 
+#<pitchshift=12>	 {duration=2.5b}		  @q2
+#{falloff=0.13} {duration=3b} <commastep=0.45> <pitchshift=0> {volume=0.8} @q2
+#Ma {falloff=0.10}  {duration=4b}<commastep=0.50> <pitchshift=0> {volume=0.4} @q2
+#Ja {volume=1} <commastep=0.25> @q ^ @q ^ @q <pitchshift=4> @q <pitchshift=0>
+#Mb {volume=0.5} @q<pitchshift=4>,,@q<pitchshift=0>@q,,@q,,
+#Jb              _ @q,,<pitchshift=-4>@q,,@q,,<pitchshift=0>@q,,
+#Jb              _ @q,,@q,,@q,,@q ,,
+#^ @q,,{volume=1} {duration=5b} @q
+#
+
+=part instrument ps named part_4
+<notestep=0.0> <commastep=0.25> _
+{volume=0.3} {falloff=0.03} {duration=3b}                @q
+{volume=0.5} <pitchshift=5> {duration=3.5b}		  @q3
+{volume=1.0} <pitchshift=0>	 {duration=7.5b}		  @q
+
+=part instrument warble at beat 4 named warble_2
+{warble=10} {duration=2b} <notestep=2> __cecg cecg cecg cecg <notestep=1> c_c^e_e^c_c^g_g^
+
+=part instrument ntick at part start part_4 named ntick_3
+{volume=0.1} {duration=0.05b} <notestep=0.125> <commastep=0.125>
+{attack_time=30%} {decay_time=30%} @xs@xs {volume=0.2}
+{attack_time=40%} {decay_time=40%} @xs@xs {volume=0.3}

@@ -1,0 +1,4 @@
+=instrument adsr-sin modulate<adsr, sin>
+=beats 100 90
+=part named foo instrument adsr-sin
+cececec {volume=0.3} c-e-c-e-c-e-

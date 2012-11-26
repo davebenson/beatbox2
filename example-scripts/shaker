@@ -1,0 +1,22 @@
+=beats 100 90
+=macro SH {shake:1000} ,
+=macro SH2 @SH @SH @SH @SH @SH @SH @SH
+=part instrument shaker
+{instrument=BbShakerInstrumentType::big_rocks} {decay=1.0} ON @SH ,,, @SH ,,, OFF
+=part instrument shaker
+{instrument=BbShakerInstrumentType::wrench} {decay=1.0} ON @SH ,,, @SH ,,, OFF
+=part instrument shaker
+{instrument=BbShakerInstrumentType::sleigh_bells} {decay=1.0} ON @SH ,,, @SH ,,, OFF
+=part instrument shaker
+{instrument=BbShakerInstrumentType::tuned_bamboo_chimes} {decay=1.0} ON @SH ,,, @SH ,,, OFF
+=part instrument shaker
+{instrument=BbShakerInstrumentType::coke_can} {decay=1.0} ON @SH ,,, @SH ,,, OFF
+=part instrument shaker
+{instrument=BbShakerInstrumentType::penny_and_mug} {decay=1.0} ON @SH ,,, @SH ,,, OFF
+=part instrument shaker
+<commastep=0.25> ON @SH2 <commastep=0.20> @SH2 <commastep=0.15> @SH2 <commastep=0.1> @SH2
+OFF
+=part instrument shaker
+<commastep=0.25> ON @SH2 {decay=1.0} @SH2 {decay=0.9},,,,,
+OFF
+

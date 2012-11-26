@@ -1,0 +1,82 @@
+=marimba
+strike_position 0.4453120
+stick_hardness 0.4296880
+direct_gain 0.0937500
+mode 0 1.000000 1.000 0.040
+mode 0 3.990000 0.999 0.010
+mode 0 10.650000 0.999 0.010
+mode 2443.000000 0 0.999 0.008
+
+=vibraphone
+strike_position 0.5703120
+stick_hardness 0.3906250
+direct_gain 0.0781250
+mode 0 1.000000 1.000 0.025
+mode 0 2.010000 1.000 0.015
+mode 0 3.900000 1.000 0.015
+mode 0 14.370000 1.000 0.015
+vibrato_gain 0.2
+vibrato_frequency 6
+
+=agogo
+strike_position 0.3593750
+stick_hardness 0.6093750
+direct_gain 0.1406250
+mode 0 1.000000 0.999 0.060
+mode 0 4.080000 0.999 0.050
+mode 0 6.669000 0.999 0.030
+mode 3725.000000 0 0.999 0.020
+
+=wood1
+strike_position 0.3750000
+stick_hardness 0.4609380
+direct_gain 0.0468750
+mode 0 1.000000 0.996 0.040
+mode 0 2.777000 0.994 0.010
+mode 0 7.378000 0.994 0.010
+mode 0 15.377000 0.990 0.008
+
+=reso
+strike_position 0.2500000
+stick_hardness 0.4531250
+direct_gain 0.1015620
+mode 0 1.000000 1.000 0.020
+mode 0 2.777000 1.000 0.005
+mode 0 7.378000 1.000 0.005
+mode 0 15.377000 1.000 0.004
+
+=wood2
+strike_position 0.4453120
+stick_hardness 0.3125000
+direct_gain 0.1093750
+mode 0 1.000000 0.996 0.040
+mode 0 1.777000 0.994 0.010
+mode 0 2.378000 0.994 0.010
+mode 0 3.377000 0.990 0.008
+
+=beats
+strike_position 0.2968750
+stick_hardness 0.3984380
+direct_gain 0.0703120
+mode 0 1.000000 1.000 0.020
+mode 0 1.004000 1.000 0.005
+mode 0 1.013000 1.000 0.005
+mode 0 2.377000 0.999 0.004
+
+=twofix
+strike_position 0.4531250
+stick_hardness 0.4531250
+direct_gain 0.0703120
+mode 0 1.000000 1.000 0.040
+mode 0 4.000000 0.999 0.010
+mode 1320.000000 0 0.999 0.010
+mode 3960.000000 0 0.999 0.008
+
+=clump
+strike_position 0.5703120
+stick_hardness 0.3906250
+direct_gain 0.0781250
+mode 0 1.000000 0.999 0.030
+mode 0 1.217000 0.999 0.030
+mode 0 1.475000 0.999 0.030
+mode 0 1.729000 0.999 0.030

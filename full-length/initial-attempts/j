@@ -1,0 +1,123 @@
+=instrument nfade modulate<fade<noise,param_map<constant,value=1>>, adsr, sin>
+=instrument warble modulate<param_map<sin,frequency=warble>, adsr, sin>
+=instrument test modulate<exp-decay,sin>
+#=instrument piano modulate<adsr,sin>
+=instrument p normalize<complex<piano, frequency(frequency), damping(0.3), 0%..strike(1), 80% .. damping(0.1) >>
+=beats 1000 60
+=macro riff0 \
+ac,,,_e^,ac,,,_c^,ea,,c,,,_c^,e,,ag,,a,,a,,c,_a^, \
+c,^a_,c,,,,a,_c^,^a_,_e^,a,,,_c^,g,_c^,a,,c,,,_c^,e,_e^, \
+a,,,_g^,c,,,_e^,a,,,_e^,c,_g^,e,,c,_e^,a,^e_,ca,_g^,c,_e^, \
+a,_e^,c,^e_,a,,c,^e_,e,,a,^g_,e,^g_,ce,,,_e^^e_,g,_e^^e_,a,_e^^e_,c,,
+=macro riff1 \
+_a^,g,_b^,e,_c^,g,_a^,e,_c^,a,^e_,_e^,a,_c^,a,_e^,
+=macro riff2 \
+_a^,^ce_,_ae^,^c_c,e_c^,^a_,a,e,^a_,c,e,^a_,c,ea,c,_c^e,
+
+=instrument env2
+param_map<waveform,
+          waveform=linear_waveform(double_array([0.0, 0.0,         0.1,   2.0,
+                                                 0.2, 0.5,         0.5,   0.3,
+					         0.6, 1.0,         0.8,   0.5,
+					         0.9, 0.7,         1.0,   0.0 ]))>
+
+=instrument test2 modulate<sin, env2>
+
+=instrument my_drum
+param_map<fm,
+	  envelope=linear_waveform(double_array([0,0.8, 0.2,1.0, 0.5,0.2, 0.6,0.4, 0.7,0.1, 1.0,0.0])),
+	  modulation_envelope=linear_waveform(double_array([0,1, 0.12,0, 0.40,1, 0.60,0, 0.80,0.8, 1.0,0.0]))>
+
+=part instrument p named piano
+<notestep=0> <dotbeats=0.0> {duration=2b} <commastep=0.125>
+<pitchshift=1>
+@riff0
+Ma
+@riff1
+@riff2
+@riff1
+@riff2
+@riff1
+Mb
+@riff1
+@riff1
+@riff2
+@riff1
+@riff2
+FADE{start_mark=b, param=volume, start_value=1, end_value=0.03, interpolate=exponential}
+
+
+
+=macro baseline0 a,c,e,c, a,c,e,c, a,c,e,c, a,c,e,c,
+=macro baseline0g a,GRACE{^c_}c,e,c, a,GRACE{^c_}c,e,c, a,GRACE{^c_}c,e,c, a,GRACE{^c_}c,e,c,
+=macro baseline0o a,c,_e^,c, a,c,^e_,c, a,c,_e^,c, a,c,^e_,c,
+=part instrument grain2 at mark a named grain2
+<notestep=0> <dotbeats=0.0> <commastep=0.25>
+<pause=0.0625> {noise_level=0.15}
+<pitchshift=1>
+@baseline0
+@baseline0
+@baseline0g
+@baseline0g
+@baseline0
+@baseline0
+@baseline0g
+@baseline0g
+@baseline0
+Mc
+@baseline0
+@baseline0g
+@baseline0g
+@baseline0
+@baseline0
+@baseline0o
+@baseline0o
+@baseline0g
+@baseline0
+@baseline0o
+@baseline0o
+@baseline0g
+@baseline0
+FADE{start_mark=a, param=volume, start_value=0.07, end_value=1, interpolate=exponential}
+=part instrument test2 at mark a named test2
+<notestep=0> <dotbeats=0.0> <commastep=1> {duration=4b}
+<pitchshift=1>@riff0
+FADE{start_mark=a, param=volume, start_value=0.05, end_value=0.2, interpolate=exponential}
+=part instrument my_drum at mark c named my_drum
+<notestep=0> <commastep=0.5>
+<pitchshift=1>__
+@riff0
+V+ _ @riff0 V- ^
+Md
+@riff0
+@riff0
+
+=instrument adr filter<gain<modulate<sin,exp-decay>>, arctan_filter()>
+=part instrument adr at mark d named adr
+<notestep=0> <commastep=0.25> {duration=0.5b}
+<pitchshift=1>
+_
+@baseline0
+@baseline0g
+@baseline0g
+FADE{start_mark=d, param=gain, interpolate=exponential, start_value=1, end_value=10000}
+FADE{start_mark=d, param=volume, interpolate=exponential, start_value=1, end_value=0.06}
+Me
+@baseline0o
+@baseline0
+@baseline0o
+FADE{start_mark=e, param=gain, interpolate=exponential, start_value=10000, end_value=1}
+FADE{start_mark=e, param=volume, interpolate=exponential, start_value=0.06, end_value=1}
+Mf
+@baseline0
+@baseline0g
+@baseline0g
+FADE{start_mark=f, param=gain, interpolate=exponential, start_value=1, end_value=10000}
+FADE{start_mark=f, param=volume, interpolate=exponential, start_value=0.5, end_value=0.03}
+Mg
+@baseline0o
+@baseline0
+@baseline0o
+FADE{start_mark=g, param=gain, interpolate=exponential, start_value=10000, end_value=1}
+FADE{start_mark=g, param=volume, interpolate=exponential, start_value=0.03, end_value=0.5}
+

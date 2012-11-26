@@ -1,0 +1,5 @@
+=beats 100 240
+=part instrument slide_whistle
+{frequency_change_rate=800}{volume=1}  
+ON {volmod_depth=0.8} {volmod_frequency=10}c,
+{volume=0}, OFF

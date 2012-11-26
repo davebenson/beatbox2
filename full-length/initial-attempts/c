@@ -1,0 +1,148 @@
+=instrument clar
+complex<clarinet,
+	vibrato_gain(0.1),
+	noise_gain(0.1),
+	frequency(frequency),
+	0% .. start_blowing(0.3,5),
+	90% .. stop_blowing(1)>
+=instrument nfilter
+filter<noise,
+       butterworth(BbButterworthMode::band_pass, frequency, 0.04, 10),
+      >
+=instrument adsrbuzz
+filter<modulate<adsr,buzz>,
+       butterworth(BbButterworthMode::band_pass, frequency, 0.04, 20),
+      >
+=instrument d1 mix<param_map<gain<nfilter>,gain=10>,sin>>
+=instrument d0
+modulate<mix<param_map<gain<nfilter>,gain=noise_gain*2.5>,
+	     param_map<gain<sin>,gain=1-noise_gain>>,
+	 exp-decay
+	>
+=instrument maraca
+complex<shaker,
+        instrument(BbShakerInstrumentType::maraca),
+        0% .. shake(1000)
+       >
+=instrument nfadeout fade<noise, param_map<constant, value=0>>
+=instrument nvibout
+modulate<adsr,
+	 vibrato<
+	 mix<param_map<gain<nfadeout>, gain=noise_gain*frequency>,
+	     param_map<constant,value=frequency>
+	    >
+	 >
+	>
+=instrument nfadein fade<noise, param_map<constant, value=0>>
+=instrument nvibin
+modulate<adsr,
+         vibrato<mix<param_map<gain<nfadein>, gain=noise_gain*frequency>,
+                     param_map<constant,value=frequency>
+                    >
+                >
+        >
+=instrument drum1
+param_map<gain<modulate<exp-decay, sin>>,
+          frequency=frequency*rel_freq,
+          halflife_time=halflife_time * pow(rel_freq, -overtone_falloff),
+          gain=pow(rel_freq, -overtone_falloff)>
+=instrument drum
+mix<param_map<drum1, rel_freq=1.000>,
+    param_map<drum1, rel_freq=3.156>,
+    param_map<drum1, rel_freq=1.594>,
+    param_map<drum1, rel_freq=3.501>,
+    param_map<drum1, rel_freq=2.136>,
+    param_map<drum1, rel_freq=3.600>,
+    param_map<drum1, rel_freq=2.296>,
+    param_map<drum1, rel_freq=3.652>,
+    param_map<drum1, rel_freq=2.653>,
+    param_map<drum1, rel_freq=4.060>,
+    param_map<drum1, rel_freq=2.918>,
+    param_map<drum1, rel_freq=4.154>>
+=instrument dr reverse<modulate<sin, exp-decay>>
+=beats 300 60
+
+# riff0 contains 8 commas.
+# riff1 contains 48 commas.
+# riff2 contains 48 commas.
+=macro riff0 ca,,e,c,f,, e.,,
+=macro riff1 c,d,e,f,^a_,c,a,c,e,,f,e,c.,e,,a,,d,e,,f.,,ca,,e,c,f,, a.,, \
+c,d,e,f,^a_,c,a,c,e,,c,a,c,^a_,f,e,d,,
+=macro riff2 c,^a_,_c^,eg.,_b^d,,g,c,d,,b,, \
+g.,,db,,_g^,^g_b.,b,b,ac,g,c,ab,,e,g,c,a,,c,e,g,,c, \
+c,e,c,,a,,ce,g,a,c,ea..,e,^e_,
+
+=part named first instrument d0 
+<notestep=0> <commastep=0.25> {duration=2b} 
+^
+<pitchshift=0> {noise_gain=1} @riff0 {noise_gain=0.9} @riff0
+<pitchshift=5> {noise_gain=0.8} @riff0 {noise_gain=0.7} @riff0
+<pitchshift=-4> {noise_gain=0.6} @riff0 {noise_gain=0.5} @riff0
+
+=part named clar0 instrument clar at part end first
+<notestep=0> <commastep=0.5> {duration=0.5b} <dotbeats=0.25> {volume=0.3}
+_
+@riff0  @riff0 @riff0 @riff0 @riff0
+
+
+=part instrument d0 at part end first named d0_2
+<notestep=0> <commastep=0.25> {duration=2b} 
+^
+<pitchshift=0> @riff1
+<pitchshift=-7> @riff0 @riff0
+<pitchshift=0> @riff0 @riff0
+<pitchshift=0> @riff2
+<pitchshift=5> @riff0 @riff0
+<pitchshift=-4> @riff0 @riff0
+<pitchshift=0> @riff0 @riff0
+
+=part instrument maraca at part end clar0 named maraca_1
+{duration=0.5b} <notestep=0.25> <commastep=0.25>
+xxx, xx,x x,xx ,xxx x,xx
+xx,x xxx, xx,x x,xx ,xxx
+x,xx xx,x xxx, xx,x x,xx
+,xxx x,xx xx,x xxx, xx,x
+
+=part instrument nvibin named nvibin
+{duration=0.25b} <notestep=0.25> <commastep=0.25> {noise_gain=1}
+cxx, ex,x g,xx ,exx a,xx
+b-x,x gxx, ax,x e,xx ,axx
+c,xx ex,x axx, cx,x g,xx
+,b-xx c,xx ex,x axx, cx,x
+<notestep=0>
+,,
+<pitchshift=0> {noise_gain=1.0} @riff0
+<pitchshift=5> {noise_gain=0.7} @riff0
+<pitchshift=0> {noise_gain=0.5} @riff1
+<pitchshift=-8> {noise_gain=0.3} @riff0
+<pitchshift=5> {noise_gain=0.1} @riff0
+<pitchshift=0> {noise_gain=0.0} @riff0
+
+
+=paste first named repeat_first
+
+=part instrument drum at part start repeat_first named drum
+{duration=1.50b} <notestep=0.25> <commastep=0.25> {halflife_time=20%} {overtone_falloff=2}
+__
+cxx, ex,x g,xx ,exx a,xx
+{overtone_falloff=3} b-x,x gxx, ax,x e,xx ,axx
+c,xx ex,x axx, cx,x g,xx
+{overtone_falloff=4} ,b-xx c,xx ex,x axx, cx,x
+
+<notestep=0>
+,,
+<pitchshift=0>  @riff0
+{overtone_falloff=5} <pitchshift=5>  @riff0
+<pitchshift=0>  @riff1
+{overtone_falloff=6.5} <pitchshift=-8>  @riff0
+<pitchshift=5>  @riff0
+<pitchshift=0>  @riff0
+
+=part instrument maraca at part start repeat_first named maraca_2
+{duration=0.5b} <notestep=0.25>
+<commastep=1> ,,,,,,,,
+<commastep=0.25>
+{volume=0.5} xxx, xx,x x,xx ,xxx x,xx
+{volume=0.6} xx,x xxx, xx,x x,xx ,xxx
+{volume=0.7} x,xx xx,x xxx, xx,x x,xx
+{volume=0.8} ,xxx x,xx xx,x xxx, xx,x

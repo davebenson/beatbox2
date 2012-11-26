@@ -1,0 +1,72 @@
+=instrument burst_noenv
+mix<param_map<gain<sin>,
+              param gdouble amp0 0 1 0.5,
+              param gdouble freq0 1 10000 1000,
+              gain=amp0,
+              frequency=freq0>,
+    param_map<gain<sin>,
+              param gdouble amp1 0 1 0.5,
+              param gdouble freq1 1 10000 1000,
+              gain=amp1,
+              frequency=freq1>,
+    param_map<gain<sin>,
+              param gdouble amp2 0 1 0.5,
+              param gdouble freq2 1 10000 1000,
+              gain=amp2,
+              frequency=freq2>
+>
+=instrument burst
+modulate<burst_noenv,
+         param_map<waveform, waveform=sin_envelope()>>
+
+=instrument att
+wave_train<param_map<burst, duration=0.005s>,
+           param_map<waveform,
+	             param BbWaveform amp_waveform,
+		     waveform=amp_waveform>,
+           mix<
+	     param_map<constant, value=frequency>,
+
+             # should we scale this by frequency?
+	     # i.e. should value = vibrato_depth*frequency?
+             param_map<modulate<sin, waveform, constant>,
+                       param BbWaveform vibrato_waveform,
+                       param gdouble vibrato_depth 0 2 0.01,
+                       param gdouble vibrato_frequency 0 1000 6,
+		       frequency=vibrato_frequency*frequency,
+		       value=vibrato_depth,
+		       waveform=vibrato_waveform
+		      >
+           >
+          >
+=beats 100 90
+=part instrument att
+{duration=2b}
+{freq0=730} {amp0=0.6}
+{freq1=1090} {amp1=0.3}
+{freq1=2440} {amp1=0.1}
+{vibrato_depth=0.001}
+{amp_waveform=linear_waveform(double_array([0, 0, 0.25, 1,   0.75,1,  1.00,0]))}
+{vibrato_waveform=linear_waveform(double_array([0, 1, 1, 1]))}
+_ a,b,c,
+_ a,b,c,
+^^
+
+# (fofins 0 4 270 .2 0.005 730 .6 1090 .3 2440 .1 '(0 0 40 0 75 .2 100 1) 
+#          '(0 0 .5 1 3 .5 10 .2 20 .1 50 .1 60 .2 85 1 100 0))
+{amp_waveform=linear_waveform(double_array([0, 0, 0.005,1, 0.03,.5, 0.1,.2, 0.2,.1, 0.5,.1, .6,.2, .85,1, 1,0]))}
+{vibrato_waveform=linear_waveform(double_array([0,0, 0.4,0, 0.75,0.2, 1,1]))}
+_ a,b,c,
+_ a,b,c,
+^^
+
+#  (fofins 0 4 (* 6/5 540) .2 0.005 730 .6 1090 .3 2440 .1 '(0 0 40 0 75 .2 100 1) 
+#          '(0 0 .5 .5 3 .25 6 .1 10 .1 50 .1 60 .2 85 1 100 0))
+{amp_waveform=linear_waveform(double_array([0,0, .005,.5, 0.03,.25, 0.06,.1, .1,.1, .5,.1, .6,.2, .85,1, 1,0]))}
+d,f,a,
+c,e,
+
+#  (fofins 0 4 135 .2 0.005 730 .6 1090 .3 2440 .1 '(0 0 40 0 75 .2 100 1) 
+#          '(0 0 1 3 3 1 6 .2 10 .1 50 .1 60 .2 85 1 100 0)))
+{amp_waveform=linear_waveform(double_array([0,0, 0.01,3, 0.03,1, 0.06,.2, 0.1,.1, .5,.1, .6,.2, .85,1, 1,0]))}
+__a,c,e,

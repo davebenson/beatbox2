@@ -1,0 +1,6 @@
+=instrument nf param_map<noise_filterer, filter=square_filter(2)>
+=instrument m modulate<adsr, nf>
+# =set gnuplot
+=beats 100 90
+=part instrument nf
+<notestep=5> {duration=5beats} {prepasses=0} {repeat_count=60} xx

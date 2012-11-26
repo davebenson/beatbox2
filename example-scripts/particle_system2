@@ -1,0 +1,44 @@
+=instrument r
+param_map<grain1, frequency=rand(400,1000)>
+=instrument r2
+param_map<grain1, param gdouble frequency 1 20000 440,
+          param BbDuration nht secs 0.005,
+          noise_halflife_time=nht,
+          resonance_halflife_time=0.005s,
+          frequency=pick([1,frequency * 1.000,
+                          1,frequency * 1.189,
+			  1,frequency * 1.498])>
+=instrument r2ps
+normalize<
+particle_system<param gdouble frequency 1 20000 440,
+                param BbDuration duration beats 1,
+		param BbDuration nht secs 0.005,
+		param gdouble pfactor 0.01 100 1,
+                grain [param_map<gain<exp-decay>,gain=0.01*pfactor, halflife_time=20%>]
+		      r2
+               >
+>
+=beats 100 90
+#=part instrument r
+#<notestep=0.25b>
+#xxxxxx ,,
+#=part instrument r2
+#<notestep=0.25b>
+#xxxxxx ,,
+=part instrument r2ps
+Ma
+{pfactor=0.1}
+abcdefg
+abcdefg
+abcdefg
+abcdefg
+abcdefg
+abcdefg
+abcdefg
+abcdefg
+abcdefg
+abcdefg
+abcdefg
+abcdefg
+#FADE{start_mark=a, param=nht, start_value=0.001s, end_value=0.01s}
+FADE{start_mark=a, param=pfactor, start_value=0.1, end_value=10, interpolate=exponential}

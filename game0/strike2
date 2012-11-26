@@ -1,0 +1,4 @@
+=beats 100 90
+=macro SH {shake:1} ,
+=part instrument shaker
+<notestep=5> ON @SH  OFF

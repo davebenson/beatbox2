@@ -1,0 +1,7 @@
+=beats 100 120
+=part instrument slide_whistle
+{frequency_change_rate=800}{volume=0}  \
+ON {volmod_depth=0.8} {volmod_frequency=10} {volume=0.5}cece{volume=0.8}da{volume=0.5}cece, \
+{freqmod_frequency=5} {freqmod_depth=0.1} edcbacaca \
+{freqmod_frequency=5} {freqmod_depth=0.01} {frequency_change_mute=1} edcbacaca \
+{volume=0}, OFF

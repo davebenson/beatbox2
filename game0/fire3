@@ -1,0 +1,6 @@
+=instrument m modulate<adsr, sweep>
+=beats 100 90
+=part instrument m named x
+{duration=0.2b} {release_time=0.3b} <notestep=0.0> <commastep=0.5>
+{octave_time=0.05s}
+^e

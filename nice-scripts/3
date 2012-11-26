@@ -1,0 +1,19 @@
+=instrument nfade modulate<fade<noise,param_map<constant,value=1>>, adsr, sin>
+=instrument warble modulate<param_map<sin,frequency=warble>, adsr, sin>
+=instrument test modulate<exp-decay,sin,noise_01>
+=instrument drum mix<      \
+                  param_map<modulate<exp-decay,sin,constant>, frequency=frequency*1, value=1, halflife_time=20>, \
+                  param_map<modulate<exp-decay,sin,constant>, frequency=frequency*2, value=0.5, halflife_time=10>, \
+                  param_map<modulate<exp-decay,sin,constant>, frequency=frequency*3, value=0.2, halflife_time=5>, \
+                  param_map<modulate<exp-decay,sin,constant>, frequency=frequency*4, value=0.1, halflife_time=4>, \
+                 >
+=instrument rdrum reverse<drum>
+      
+=beats 100 80
+#=part instrument rdrum at beat 0 
+#<notestep=0.25> <commastep=0.25>cccdcadc ,,, cc+cc,b,cae ,,, ddadcadf+
+=part instrument test at beat 0 repeat 2
+{duty_cycle=70} <notestep=0> <commastep=0.25>
+da,d,a,d,c_a^,a,d,f+, ,, _ a,ce,a,df+, ae,f+,a,ce, a,c,f+,d,^ ,,,,
+=part instrument rdrum at beat 0 
+<notestep=1> {duration=2.5}__gfc <pitchshift=7> gfc <pitchshift=-9> gfc

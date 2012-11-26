@@ -1,0 +1,10 @@
+=instrument nfade modulate<fade<noise,param_map<constant,value=1>>, adsr, sin>
+=instrument warble modulate<param_map<sin,frequency=warble>, adsr, sin>
+=instrument test modulate<exp-decay,sin>
+=beats 100 90
+=part instrument nfade
+cececece
+=part instrument test at beat 0
+<notestep=0.25> ceceadadfafa
+=part instrument warble at beat 0
+{warble=10} {duration=2beats} <notestep=2> ^ cece

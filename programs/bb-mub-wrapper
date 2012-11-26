@@ -1,0 +1,19 @@
+#! /usr/bin/perl -w
+
+
+my $input_filename = $ARGV[0];
+my $output_filename = $ARGV[1];
+
+my $text = `cat $input_filename`;
+my $obj = eval $text or die $@;
+
+open (O, ">$output_filename") or die "$!";
+
+$obj->output (\*O,
+	       file_format => 'raw'
+#	       sample_format => 'pcm16', [double==default]
+# 	       byte_order => 'little',
+	       
+	       );
+
+close O;

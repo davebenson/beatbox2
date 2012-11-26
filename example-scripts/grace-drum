@@ -1,0 +1,37 @@
+
+=instrument drum1 param_map<gain<modulate<exp-decay, sin>>, \
+                             frequency=frequency*rel_freq,  \
+                             halflife_time=halflife_time/rel_freq/rel_freq, \
+                             gain=1.0/rel_freq/rel_freq>
+=instrument drum mix<param_map<drum1, rel_freq=1.000>, \
+                     param_map<drum1, rel_freq=3.156>, \
+                     param_map<drum1, rel_freq=1.594>, \
+                     param_map<drum1, rel_freq=3.501>, \
+                     param_map<drum1, rel_freq=2.136>, \
+                     param_map<drum1, rel_freq=3.600>, \
+                     param_map<drum1, rel_freq=2.296>, \
+                     param_map<drum1, rel_freq=3.652>, \
+                     param_map<drum1, rel_freq=2.653>, \
+                     param_map<drum1, rel_freq=4.060>, \
+                     param_map<drum1, rel_freq=2.918>, \
+                     param_map<drum1, rel_freq=4.154>>
+=instrument drum2 modulate<exp-decay, sin>
+=instrument drum3 mix<param_map<drum1, rel_freq=1.000>>
+
+=beats 300 60
+
+# riff0 contains 8 commas.
+# riff1 contains 48 commas.
+# riff2 contains 48 commas.
+=macro riff0 ca,,e,c,f,, e.,,
+=macro riff1 c,d,e,f,^a_,c,a,c,e,,f,e,c.,e,,a,,d,e,,f.,,ca,,e,c,f,, a.,, \
+c,d,e,f,^a_,c,a,c,e,,c,a,c,^a_,f,e,d,,
+=macro riff2 c,^a_,_c^,eg.,_b^d,,g,c,d,,b,, \
+g.,,db,,_g^,^g_b.,b,b,ac,g,c,ab,,e,g,c,a,,c,e,g,,c, \
+c,e,c,,a,,ce,g,a,c,ea..,e,^e_,
+
+=part named first instrument drum
+{duration=2beats} {halflife_time=20%} __cece
+<gracedurationscale=0.1><gracetimescale=0.1>
+,, GRACE{^ce_}c GRACE{_gc^}e
+   GRACE{^ea_}c GRACE{_ga^}c

@@ -1,0 +1,9 @@
+=instrument clar complex<clarinet, \
+                         vibrato_gain(0.9), \
+			 frequency(frequency), \
+                         0% .. start_blowing(0.3,5), \
+                         90% .. stop_blowing(1)>
+
+=beats 100 90
+=part instrument clar
+a_c_e _c_e-_a

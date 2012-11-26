@@ -1,0 +1,10 @@
+#! /bin/sh
+
+date=`date +%Y%m%d`
+mkdir $date || {
+  echo "error: directory $date already exists" 1>&2
+  exit 1
+}
+
+OUTPUT_DIR="$date" build-scripts/make-tarball "CVS$date"
+OUTPUT_DIR="$date" build-scripts/make-all-songs

@@ -1,0 +1,9 @@
+=beats 100 60
+=part instrument fm_drum
+{duration=1beats} {index=5}
+{gls_scale=0} {cascade_ratio=3.515} {fm_ratio=1.414}
+{frequency=40} x ,,
+{duration=4beats}
+{frequency=20} x ,,,,,,
+{duration=0.3beats}
+{frequency=100} {index=10000} x,,,,

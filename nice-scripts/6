@@ -1,0 +1,20 @@
+=instrument bz modulate<exp-decay, sin, \
+                        fade<param_map<mix<constant, gain<sin>>, gain=moddepth, frequency=modfreq, value=1>, \
+                             param_map<constant, value=1>>>
+=beats 100 60
+=macro o 
+=macro p df+c+f+c+f+d
+=macro q af+c+cad,
+=part instrument bz
+{moddepth=1} {duration=3} {modfreq=10} <notestep=0.25> <commastep=0.25>
+@o <pitchshift=12>  @o <pitchshift=-12> @o
+
+{duration=5} <notestep=0> <pitchshift=0>
+df+,,c+f+,,c+f+,,da,,f+c+,,ca,,d,
+
+<notestep=0.25> <pitchshift=12> @p <pitchshift=5>@q
+<pitchshift=12> @p <pitchshift=17>@q
+<pitchshift=17> @p <pitchshift=12>@q
+<pitchshift=17> @p <pitchshift=5>@q
+<pitchshift=0> @p <pitchshift=17>@q
+

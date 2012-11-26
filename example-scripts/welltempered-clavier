@@ -1,0 +1,17 @@
+=instrument nfade modulate<fade<noise,param_map<constant,value=1>>, adsr, sin>
+=instrument warble modulate<param_map<sin,frequency=warble>, adsr, sin>
+=instrument test modulate<exp-decay,sin>
+#=instrument piano modulate<adsr,sin>
+=instrument p normalize<complex<piano, frequency(frequency), damping(0.3), 0%..strike(1), 80% .. damping(0.1) >>
+=beats 1000 60
+=part instrument p
+<notestep=0> <dotbeats=0.0> {duration=2b} <commastep=0.35>
+c....... , e.. .... , g, ^ c, e, _g,^c,e,_ 
+c....... , e.. .... , g, ^ c, e, _g,^c,e,_ 
+c....... , d.. .... , ^a,  d, f, a,d,f,_ 
+c....... , d.. .... , ^a,  d, f, a,d,f,_
+_
+c....... , e.. .... , g, ^ c, e, _g,^c,e,_ 
+c....... , e.. .... , g, ^ c, e, _g,^c,e,_ 
+c....... , d.. .... , ^a,  d, f, a,d,f,_ 
+c....... , d.. .... , ^a,  d, f, a,d,f,_

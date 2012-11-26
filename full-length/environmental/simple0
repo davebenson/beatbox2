@@ -1,0 +1,24 @@
+=instrument env
+param_map<waveform,
+          waveform=linear_waveform(double_array([0.0, 0.0,         0.5,   1.0,
+                                                 0.6, 0.5,         0.7,   1.0,
+					         0.8, 0.5,         1.0,   0.0 ]))>
+=instrument env2
+param_map<waveform,
+          waveform=linear_waveform(double_array([0.0, 0.0,         0.1,   2.0,
+                                                 0.2, 0.5,         0.5,   0.3,
+					         0.6, 1.0,         0.8,   0.5,
+					         0.9, 0.7,         1.0,   0.0 ]))>
+=instrument test modulate<sin, env>
+=instrument test2 modulate<sin, env2>
+=beats linear 100 90 200
+=beats linear 100 200 500
+=beats linear 100 500 500
+=beats linear 100 500 100
+=beats linear 1000 500 100
+=macro riff ce,a,e,,c,e,,_a^,f,^c_,a,e,,c,g,g_e^,a,c,e,,a,ce-,a,,f,,a,c,e,fa,c,c,e,a,c,e,c,g,,e,c,e,c,e,g,a,c,e,,g,b,a,
+=part named foo instrument test2
+{duration=4b} <notestep=4> ca^ce_fac^a,feca,fdec,acec,e_e^^e_gce
+<commastep=0>@riff
+<commastep=0>@riff
+<commastep=0>@riff

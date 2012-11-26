@@ -1,0 +1,132 @@
+<!-- <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+  "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" 
+> -->
+<refentry id="bb-run">
+ <refmeta>
+  <refentrytitle>bb-run</refentrytitle>
+  <manvolnum>1</manvolnum>
+ </refmeta>
+ <refnamediv>
+  <refname>bb-run</refname>
+  <refpurpose>Create sound from a script</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+ <cmdsynopsis>
+  <command>bb-run</command>
+  <arg choice="opt" rep="repeat">
+   <group>
+    <arg>-p</arg>
+    <arg>-o <replaceable>WAV_FILENAME</replaceable></arg>
+    <arg>-d</arg>
+    <arg>--dump-parts</arg>
+    <arg>--dump-parts</arg>
+    <arg>--part=<replaceable>PART_NAME</replaceable></arg>
+   </group>
+  </arg>
+ </cmdsynopsis>
+ </refsynopsisdiv>
+
+ <refsect1><title>DESCRIPTION</title>
+ <para>
+   Beatbox2 is really just a vehicle for me to make my music.
+   But it is released in the hopes that it will be generally useful.
+ </para>
+ </refsect1>
+
+ <refsect1><title>FORMAT OF A SCRIPT</title>
+ <para>
+   The overall format of a script is that it is a bunch of sections,
+   each beginning with a line that begins with an equal sign.
+   Here is a simple script:
+   <programlisting><![CDATA[
+=beats 100 90
+=instrument drum modulate<exp-decay, sin>
+=part instrument drum
+acacaca
+]]></programlisting>
+   this script has three sections.  The first is the "beats" section
+   which tells the number of beats and BPM of those beats.
+   The second is the "instrument" section which defines the
+   instrument "drum" as an exponential decay enveloping a sine wave.
+   The third is a musical part, played on the aforementioned drum instrument,
+   consisting of seven notes.
+ </para>
+ <para>
+   ...
+ </para>
+ <para>
+  Here are the known types of sections, listed briefly.
+  <variablelist>
+   <varlistentry>
+    <term>=beats</term>
+    <listitem><para>
+     ...
+    </para></listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>=instrument</term>
+    <listitem><para>
+     ...
+    </para></listitem>
+   </varlistentry>
+   <varlistentry>
+    <term>=part</term>
+    <listitem><para>
+     ...
+    </para></listitem>
+   </varlistentry>
+  </variablelist>
+ </para>
+  <refsect2><title>The =beats section</title>
+   <para>
+   ...
+   </para>
+  </refsect2>
+  <refsect2><title>The =instrument section</title>
+   <para>
+   ...
+   </para>
+  </refsect2>
+  <refsect2><title>The =part section</title>
+   <para>
+   ...
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1><title>FORMAT OF A SCORE</title>
+ <para>
+   ...
+ </para>
+ </refsect1>
+
+ <refsect1><title>INSTRUMENTS</title>
+ <para>
+   ...
+ </para>
+ </refsect1>
+
+ <refsect1><title>FUNCTION REFERENCE</title>
+   <refsect2><title>MATHEMATICAL</title>
+     <para>
+       ...
+     </para>
+   </refsect2>
+   <refsect2><title>FILTER1S</title>
+     <para>
+       ...
+     </para>
+   </refsect2>
+   <refsect2><title>WAVEFORMS</title>
+     <para>
+       ...
+     </para>
+   </refsect2>
+   <refsect2><title>RANDOM NUMBERS AND DISTRIBUTIONS</title>
+     <para>
+       ...
+     </para>
+   </refsect2>
+ </refsect1>
+</refentry>

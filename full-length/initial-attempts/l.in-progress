@@ -1,0 +1,65 @@
+=beats geometric 50 30 70
+=macro SH {shake:1000} ,
+=macro SH2 @SH @SH @SH @SH @SH @SH @SH
+=instrument cabasa
+complex<shaker,
+        instrument(BbShakerInstrumentType::cabasa),
+	0% .. shake(1000)
+>
+=instrument ps
+param_map<filter<compose<[noise, 0%, 1%]>, plucked_string_filter(frequency, falloff)>,
+          param gdouble falloff 0.001 0.1 0.03>
+
+#=macro Aold a,ce,^a_,,ce,,ca..,_e^a,a,c_a^,e^g_,c^a__c^,e,,ce,c,e,ce,c,ae,ca,c,e,c,,e,ac,e,g,c,ea,c,
+#=macro A a,a,c,,a,^c_c,f.c,,a.c,ce,_a^,ae,^a.._,,af,ca,^c_af,_f^ac,,fa,c,,a,_c^e,,__f^c^a,c,fa,c,c+,c,,
+#=macro A1 a,GRACE{^a_,}a,c,,a,^c_c,GRACE{^a_,}f.c,,GRACE{^a_,}a.c,ce,_a^,GRACE{^a_,}ae,^a.._,,GRACE{^a_,}af,ca,GRACE{^a_,}^c_af,_f^ac,,fGRACE{^a_,}a,c,,GRACE{^a_,}a,_c^e,,__f^c^GRACE{^a_,}a,c,GRACE{^a_,}fa,c,c+,GRACE{^a_,}c,,
+=macro A2 a,a,a,c,a,e,a,ca,e,c,a,,e,a,, \
+          a,a,a,_e^,a,_c^,a,_f^a,_f^,a,_g^,,a,,_f^,a,,
+
+# This variant is a bit disharmonious, sounds bad maybe.
+=macro A3 a,_c^a,_e^a,c,a,^a_e,a,_e^ca,e,_c^c,_c^a,,_c^e,_e^a,, \
+          a,_c+^a,a,c_e^,_c+^a,_c^,^a_a,_f^a,_f^,a,_g^,,_f^a,,_cf^,_e^a,,
+
+=macro A4 a,GRACE{_c^,}a,a,c,GRACE{c,}a,GRACE{_c^,}e,a,GRACE{_e^,}ca,GRACE{^a_,}e,c,a,,GRACE{_c^,}e,a,, \
+          GRACE{^c_,}a,a,GRACE{^c_,}a,GRACE{c,}_e^,a,_c^,GRACE{c,}a,_f^a,GRACE{^a_,}_f^,GRACE{^a_,}a,_f^,,c,,_f^,a,,
+=macro A5 a,GRACE{c,}a,a,c,GRACE{c,}a,GRACE{c,}e,a,GRACE{e,}ca,GRACE{a,}e,c,a,,GRACE{c,}e,a,, \
+          GRACE{c,}a,a,GRACE{c,}a,GRACE{c,}_e^,a,_c^,GRACE{c,}a,_f^a,GRACE{c,}_f^,a,_f^,,c,,_GRACE{c,}f^,a,,
+
+
+=macro x64 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+=part named a instrument cabasa
+<notestep=0.125><commastep=0.25>
+Ma @x64 FADE{start_mark=a,param=volume,start_value=0.01, end_value=0.10,interpolate=exponential}
+Ma @x64 FADE{start_mark=a,param=volume,start_value=0.005,end_value=0.08,interpolate=exponential}
+Ma @x64 FADE{start_mark=a,param=volume,start_value=0.005,end_value=0.06,interpolate=exponential}
+Ma @x64 FADE{start_mark=a,param=volume,start_value=0.002,end_value=0.04,interpolate=exponential}
+Ma @x64 FADE{start_mark=a,param=volume,start_value=0.002,end_value=0.02,interpolate=exponential}
+=part named b instrument piano1 at part start a
+<notestep=0.0><commastep=0.25>
+{duration=2.5b}
+<pitchshift=0> @A2
+
+=part named b2 instrument piano1
+<notestep=0.0><commastep=0.25>
+{duration=2.0b} <pitchshift=5> @A3
+{duration=1.5b} <pitchshift=-5> @A2
+{duration=1.0b} <pitchshift=-7> @A4
+Mb
+{duration=0.5b} <pitchshift=0> @A5
+{duration=0.25b} <pitchshift=0> @A2
+
+=part named c instrument ps at mark b
+<notestep=0.0><commastep=0.25>
+{volume=0.05}
+a,,b,,c,,b.,,,,,,a,,c,,e,,b,,,,,,a,,ce,,_b^e,,a,,,,,,c,,ea,,ec,,ge,,,,,,cae.,,ce,,ge_a.^,,c,,e,,a.
+<commastep=0.125>
+a,,V-eV+,,b,,V-eV+,,c,,,,b.,,,,,,,,,,,,a,,,V-eV+,c,V-_a^V+,,,e,,V-_g^V+,,b,,,,,,,,
+,,,,a,,V-_e^V+,,ce,,V-_e^V+,,_b^e,,,,a,,,,,,,,,V-a,e,aV+,c,,,,ea,,,V-gV+,ec,,,V-cV+,ge,
+,,,,,,,,,V-_c^V+,,cae.,,,,ce,,,V-_c^V+,ge_a.^,,,V-^a_V+,c,,,,e,,,,a.
+
+<commastep=0.125>
+{falloff=0.9}
+a,,V-eV+,,b,,V-eV+,,c,,,V-^g_V+,b.,,,,,,,,,V-_c,eg^V+,,a,,,V-eV+,c,V-_a^V+,,,e,,V-_g^V+,,b,V-,_g,b,g,b,V+,,
+,,,,a,,V-_e^V+,,ce,,V-_e^V+,,_b^e,,,,a,,,,,,,,,V-a,e,aV+,c,,,,ea,,,V-gV+,ec,,,V-cV+,ge,
+,,,,V-_,a,e,g,e,c^V+,,cae.,,,V-^g_V+,ce,,V-_e,c^V+,ge_a.^,,,V-^a_V+,c,,,V-a^a_V+,e,,,,a.
+

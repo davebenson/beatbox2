@@ -1,0 +1,4 @@
+=instrument bz modulate<adsr, buzz>
+=beats 100 90
+=part instrument bz
+{duration=5beats} <notestep=5> a

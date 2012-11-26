@@ -1,0 +1,10 @@
+=instrument partsys
+particle_system<param gdouble frequency 1 20000 440,
+                param BbDuration duration beats 1,
+                grain_param [gdouble energy 0 1 0] param_map<exp-decay, halflife_time=10%>,
+                grain [param_map<gain<exp-decay>,gain=0.01, halflife_time=20%>]
+		      param_map<grain0, noise_halflife_time=0.02s, resonance_halflife_time=0.1s, frequency=frequency>
+               >
+=beats 100 90
+=part instrument partsys
+_a,_c^,a,e,

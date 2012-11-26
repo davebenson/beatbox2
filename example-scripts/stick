@@ -1,0 +1,8 @@
+=instrument stick filter<modulate<noise, \
+                     param_map<waveform, \
+  waveform=linear_waveform(double_array([0,0.2,    0.08,0.15,       0.1,0.7, \
+                           0.4,0.17,   0.5,0.19,      0.75, 0.08, \
+			   0.85, 0.0, 1.0,0]))>>, butterworth(BbButterworthMode::band_pass, 10000, 1, 10)>
+=beats 100 60
+=part instrument stick
+{duration=1beats} x,,,

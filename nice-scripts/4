@@ -1,0 +1,8 @@
+=instrument ps filter<compose<[noise, 0, 0.01]>, plucked_string_filter(frequency, falloff)>
+=beats 100 90
+=instrument rps reverse<ps>
+=part instrument ps
+{falloff=0.1} {duration=2} ace , {duration=1} <notestep=0.25>aedebececeae^a_e^a_e^aeaecece^c_e_c^e 
+  {duration=4} <notestep=0> _ceg^a ,,,
+=part instrument ps at beat 0
+{falloff=0.1} {duration=2} _eca

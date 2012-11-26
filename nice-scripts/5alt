@@ -1,0 +1,17 @@
+=instrument nfilter modulate<adsr, filter<noise, \
+                   butterworth(BbButterworthMode::band_pass, frequency, bandwidth, dbgain), \
+                   butterworth(BbButterworthMode::band_pass, frequency, bandwidth, dbgain), \
+                   > >
+=instrument sa modulate<adsr,sin,filter<noise_01, butterworth(BbButterworthMode::low_pass, frequency, 0.1, 10)>>
+=beats 200 120
+
+=part instrument sa
+<notestep=20> <commastep=1>
+{duration=10}
+{duty_cycle=0.9}
+{attack_time=50} {release_time=50} {decay_time=0} {sustain_level=1.00}
+_c, _c^^a__,,c, ^e-^c,c,,,,^^c__
+
+=part instrument nfilter at beat 0
+{duration=10} {bandwidth=0.04} {dbgain=10} <notestep=22> <commastep=1>
+,,,,,,,,,,_c, _c,,a,c ^e-^c,,c,,,,c

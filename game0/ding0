@@ -1,0 +1,38 @@
+=instrument horn     param_map<fm, \
+                               max_depth=5, \
+                               envelope=exp_waveform(double_array([0,0, -1, .2,1, -1, .3,0.812, 0, 0.8,0.758, -1, 1,0]))>
+=instrument bassoon  param_map<fm, \
+                               frequency=5*frequency, \
+                               H=1/5, \
+                               max_depth=1.5, \
+                               envelope=exp_waveform(double_array([0,0, -1, .1,1, 0, .2,1, 0, .9,1, -3, 1,0]))>
+=instrument bell    param_map<fm, \
+                              H=1.4, \
+                              frequency=frequency, \
+                              max_depth=10, \
+                              envelope=exp_waveform(double_array([0,0, -20, .01,1, -1, .9,.25, -5, .99,.01, 0, 1,0]))>
+				
+=instrument base_fm_drum param_map<fm, \
+                               envelope=linear_waveform(double_array([0,0.8, 0.2,1.0, 0.5,0.2, 1.0,0.0])), \
+                               modulation_envelope=linear_waveform(double_array([0,1, 0.12,0, 1.0,0.0]))>
+=instrument dance_bass    param_map<base_fm_drum, H=0.6875, max_depth=2.5>
+=instrument dance_bass2   param_map<base_fm_drum, H=1, max_depth=0.2>
+=instrument wood_drum param_map<base_fm_drum, H=1.4, max_depth=0.2>
+
+=instrument snare_drum
+param_map<fm,
+	  H=1.4,
+	  min_depth=2,
+	  max_depth=1,
+	  envelope=linear_waveform(double_array([0,1, 0.1,1.0, 0.5,0.2, 1.0,0.0])),
+	  modulation_envelope=linear_waveform(double_array([0,1, 0.5,0.2, 1.0,0.0]))>
+=instrument sheet_metal
+param_map<fm,
+          H=2.2, max_depth=2,
+	  envelope=linear_waveform(double_array([0,0.8, 0.2,1.0, 0.5,0.2, 1.0,0.0])),
+	  modulation_envelope=linear_waveform(double_array([0,1, 0.12,1.0, 1.0,0.0]))>
+
+=beats 100 90
+=part instrument bell
+{duration=0.3b} <notestep=0.5>
+^^a

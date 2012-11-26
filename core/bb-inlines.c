@@ -1,0 +1,10 @@
+#define __BB_DEFINE_INLINES__
+#define G_IMPLEMENT_INLINES
+#include <glib.h>
+#include "bb-delay-line.h"
+#include "bb-filter1.h"
+#include "bb-waveform.h"
+#include "bb-rate-limiter.h"
+#include "bb-reed-table.h"
+#include "bb-tapped-delay-line.h"
+#include "bb-bow-table.h"

@@ -1,0 +1,19 @@
+=beats 100 60
+=instrument B complex<bowed, \
+                      frequency(frequency), \
+                      0%   .. start_bowing(1), \
+                      80%  .. stop_bowing()>
+=instrument C modulate<adsr,sin>
+=instrument D mix<B,C>
+=instrument E compose<[param_map<gain<C>,gain=2.5>,0%,4%],[B,40%,80%]>
+=macro TEST_SCALES \
+_abcdefg, \
+^abcdefg, \
+^abcdefg, _
+=macro TEST_CHORDS \
+ac,ce,ace,ae,cegb-,ceg^a_,
+
+=part instrument D named modbow
+@TEST_SCALES <commastep=1> {duration=2beats} <notestep=0> @TEST_CHORDS
+=part instrument E named compare
+{duration=4beats} <notestep=8><commastep=8> @TEST_SCALES {duration=4beats} <notestep=0> @TEST_CHORDS

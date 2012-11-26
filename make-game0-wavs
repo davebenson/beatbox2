@@ -1,0 +1,6 @@
+#! /bin/sh
+
+mkdir -p game0-wavs
+for s in `cd game0 && echo *` ; do
+  ./bb-run -o game0-wavs/$s.wav game0/$s
+done

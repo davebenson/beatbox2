@@ -1,0 +1,23 @@
+
+/*** BEGIN value-header ***/
+static GEnumValue @enum_name@_values[] =
+{
+/*** END value-header ***/
+
+/*** BEGIN value-production ***/
+{ @VALUENAME@, "@VALUENAME@", "@valuenick@" },
+/*** END value-production ***/
+
+/*** BEGIN value-tail ***/
+  {0,NULL,NULL}
+};
+
+GType
+@enum_name@_get_type (void)
+{
+  static GType rv = 0;
+  if (rv == 0)
+    rv = g_enum_register_static ("@EnumName@", @enum_name@_values);
+  return rv;
+}
+/*** END value-tail ***/

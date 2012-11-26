@@ -1,0 +1,5 @@
+=beats 100 90
+=macro ST {strike:1} ,
+=macro SH2 @SH @SH @SH @SH @SH @SH @SH
+=part instrument modal
+{instrument="twofix"} ON a @ST ,,{damping=0.001},c {damping=0} @ST ,,{damping=0.01}, OFF

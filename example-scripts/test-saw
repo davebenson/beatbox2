@@ -1,0 +1,7 @@
+=instrument sawnote modulate<param_map<wavetable,waveform=triangle_waveform(-1,1)>, \
+                             adsr, \
+                             param_map<wavetable, waveform=triangle_waveform(0,1), frequency=modfreq> \
+                            >
+=beats 100 60
+=part instrument sawnote
+{duration=2beats} {attack_time=10%} {decay_time=10%} {sustain_level=0.5} {release_time=10%} {modfreq=100} c,,,,_e,,,,,_g,,,,c

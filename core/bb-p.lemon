@@ -1,0 +1,195 @@
+%include {
+#include <string.h>
+#include <stdlib.h>
+#include "bb-vm.h"
+#include "bb-p.h"
+#include "bb-utils.h"
+#include "bb-duration.h"
+#include "bb-parse-context.h"
+}
+
+/* lowest to highest */
+%left COMMA.
+%left PLUS MINUS.
+%left TIMES DIVIDE.
+%left COLONCOLON.
+
+%name BbParse
+%type toplevel {BbProgram *}
+%type expr {BbProgram *}
+%extra_argument {BbParseContext *context}
+%destructor expr { bb_program_unref($$); }
+%start_symbol toplevel
+%token_type              {char *}
+%token_prefix            BB_TOKEN_TYPE_
+%token_destructor        { g_free($$); }
+
+expr(res) ::= expr(a) PLUS expr(b).
+	{ res = bb_program_new ();
+	  bb_program_add_function_begin (res);
+	  bb_program_append_program (res, a);
+	  bb_program_append_program (res, b);
+	  bb_program_add_lazy_function (res, "add"); }
+expr(res) ::= expr(a) TIMES expr(b).
+	{ res = bb_program_new ();
+	  bb_program_add_function_begin (res);
+	  bb_program_append_program (res, a);
+	  bb_program_append_program (res, b);
+	  bb_program_add_lazy_function (res, "mul"); }
+expr(res) ::= expr(a) MINUS expr(b).
+	{ res = bb_program_new ();
+	  bb_program_add_function_begin (res);
+	  bb_program_append_program (res, a);
+	  bb_program_append_program (res, b);
+	  bb_program_add_lazy_function (res, "sub"); }
+expr(res) ::= MINUS expr(a).
+	{ res = bb_program_new ();
+	  bb_program_add_function_begin (res);
+	  bb_program_append_program (res, a);
+	  bb_program_add_lazy_function (res, "neg"); }
+expr(res) ::= expr(a) DIVIDE expr(b).
+	{ res = bb_program_new ();
+	  bb_program_add_function_begin (res);
+	  bb_program_append_program (res, a);
+	  bb_program_append_program (res, b);
+	  bb_program_add_lazy_function (res, "div"); }
+
+expr(res) ::= LPAREN expr(a) RPAREN.
+	{ res = bb_program_new ();
+	  bb_program_append_program (res, a); }
+expr(res) ::= expr(a) COMMA expr(b).
+	{ res = bb_program_new ();
+	  bb_program_append_program (res, a);
+	  bb_program_append_program (res, b); }
+expr(res) ::= NUMBER(a).
+	{ GValue value;
+          char *end;
+          gdouble nvalue = strtod (a, &end);
+          if (a == end)
+            g_error ("error parsing number from %s", a);
+	  memset (&value, 0, sizeof (value));
+          if (strcmp (end, "sec") == 0 || strcmp (end, "s") == 0)
+            {
+              g_value_init (&value, BB_TYPE_DURATION);
+              bb_value_set_duration (&value, BB_DURATION_UNITS_SECONDS, nvalue);
+            }
+          else if (strcmp (end, "samp") == 0)
+            {
+              g_value_init (&value, BB_TYPE_DURATION);
+              bb_value_set_duration (&value, BB_DURATION_UNITS_SAMPLES, nvalue);
+            }
+          else if (strcmp (end, "beat") == 0 || strcmp (end, "b") == 0)
+            {
+              g_value_init (&value, BB_TYPE_DURATION);
+              bb_value_set_duration (&value, BB_DURATION_UNITS_BEATS, nvalue);
+            }
+          else if (strcmp (end, "%") == 0)
+            {
+              g_value_init (&value, BB_TYPE_DURATION);
+              bb_value_set_duration (&value, BB_DURATION_UNITS_NOTE_LENGTHS, nvalue * 0.01);
+            }
+          else if (*end != 0)
+            {
+              g_error ("garbage after number (garbage is '%s'", end);
+            }
+          else
+            {
+              g_value_init (&value, G_TYPE_DOUBLE);
+              g_value_set_double (&value, nvalue);
+            }
+	  res = bb_program_new ();
+	  bb_program_add_push (res, &value); }
+
+expr(res) ::= BAREWORD(a).
+	{ /* find or allocate parameter */
+	  guint i;
+	  for (i = 0; i < context->pspec_array->len; i++)
+	    {
+	      GParamSpec *p = g_ptr_array_index (context->pspec_array, i);
+	      if (bb_param_spec_names_equal (p->name, a))
+	        break;
+            }
+	  if (i == context->pspec_array->len)
+	    {
+              for (i = 0; i < context->n_source_pspecs; i++)
+                if (bb_param_spec_names_equal (a, context->source_pspecs[i]->name))
+                  break;
+              if (i == context->n_source_pspecs)
+		{
+		  g_message ("warning: allocating double parameter named %s", a);
+		  g_ptr_array_add (context->pspec_array,
+				   g_param_spec_double (a,a,NULL,
+				      -1e9,1e9,0,G_PARAM_READWRITE));
+		  }
+              else
+                g_ptr_array_add (context->pspec_array, context->source_pspecs[i]);
+              i = context->pspec_array->len - 1;
+	    }
+	  res = bb_program_new ();
+	  bb_program_add_push_param (res, i); }
+
+expr(res) ::= BAREWORD(func) LPAREN expr(args) RPAREN.
+	{ BbBuiltinFunc f;
+          res = bb_program_new ();
+	  f = bb_builtin_lookup (func);
+	  if (f != NULL)
+	    {
+	      bb_program_append_program (res, args);
+	      bb_program_add_builtin (res, func, f);
+	    }
+	  else
+	    {
+	      /* TODO: try resolving the function now */
+	      bb_program_add_function_begin (res);
+	      bb_program_append_program (res, args);
+	      bb_program_add_lazy_function (res, func);
+	    }
+	}
+expr(res) ::= BAREWORD(func) LPAREN RPAREN.
+	{ BbBuiltinFunc f;
+          res = bb_program_new ();
+	  f = bb_builtin_lookup (func);
+	  if (f != NULL)
+	    bb_program_add_builtin (res, func, f);
+	  else
+	    {
+	      bb_program_add_function_begin (res);
+	      bb_program_add_lazy_function (res, func);
+	    }
+	}
+	      
+
+expr(res) ::= BAREWORD(enumname) COLONCOLON BAREWORD(valuename).
+	{ GType type = g_type_from_name (enumname);
+          guint v;
+          GValue ev;
+          if (type == 0 || !g_type_is_a (type, G_TYPE_ENUM))
+            g_error ("no enum named '%s'", enumname);
+          if (!bb_enum_value_lookup (type, valuename, &v))
+            g_error ("no value of %s named %s", enumname, valuename);
+
+          memset (&ev, 0, sizeof (ev));
+          g_value_init (&ev, type);
+          g_value_set_enum (&ev, v);
+          res = bb_program_new ();
+          bb_program_add_push (res, &ev); }
+
+expr(res) ::= LBRACKET expr(a) RBRACKET.
+	{ res = bb_program_new ();
+	  bb_program_add_push_special (res, BB_VM_SPECIAL_ARRAY_BEGIN);
+	  bb_program_append_program (res, a);
+	  bb_program_add_builtin (res, "create_array", bb_builtin_create_array); }
+
+expr(res) ::= STRING_LITERAL(a).
+	{ GValue v = BB_VALUE_INIT;
+          res = bb_program_new ();
+	  g_value_init (&v, G_TYPE_STRING);
+          g_value_set_string (&v, a);
+	  bb_program_add_push (res, &v); }
+
+toplevel ::= expr(a).
+	{ if (context->program)
+	    { g_warning ("got two programs"); }
+	  else
+	    { context->program = bb_program_ref (a); }
+	}

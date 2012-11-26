@@ -1,0 +1,4 @@
+=beats 100 90
+=part instrument brass
+_
+ON {start_blowing:1, 0.001} c,,,e,,g,,c,,e,,g,,c,,e,,g,c,e,, {stop_blowing:0.005},,,, OFF

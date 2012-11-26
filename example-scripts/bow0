@@ -1,0 +1,5 @@
+=beats 100 90
+=macro SH {shake:1000} ,
+=part instrument bowed
+_
+ON c {start_bowing:1} ,, {stop_bowing:} ,,,, OFF

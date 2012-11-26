@@ -1,0 +1,11 @@
+=beats 100 90
+=part instrument voice0
+{frequency=220}
+<commastep=0.0625>
+ON {am_depth=0} {fm_depth=0.00} {volume=0} {grain_noise=.0} 
+,,,,,,,, {grain_freq_0=760}
+,,,,,,,, {grain_freq_0=600} {volume=1}
+,,,,,,,, {grain_freq_0=700} {volume=0.8} {grain_noise=.0} 
+,{grain_noise=0}{grain_freq_0=730},{grain_noise=1},{grain_freq_0=1000} {grain_noise=0},,,,, {grain_freq_0=600} {volume=1} {grain_noise=.05} 
+,,,,,,,, {volume=0}{grain_freq_0=730} {grain_noise=.0} 
+OFF

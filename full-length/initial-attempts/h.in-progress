@@ -1,0 +1,82 @@
+
+=instrument sl
+modulate<adsr, 
+         param_map<complex<slide_whistle,
+	                   frequency(frequency),
+	                   volume_change_rate(1),
+	                   frequency_change_rate(frequency),
+	                   volume(0),
+	                    0% .. volume(1),
+	                   72% .. frequency(frequency*frequency_scale),
+	                   80% .. volume_change_rate(6),
+	                   81% .. volume(0)
+	                  >,
+	param double frequency_scale 0.0001 1000 0.5>>
+=instrument dr modulate<sin,exp-decay>
+
+=instrument raw_drv
+vibrato<param_map<mix<constant, gain<sin>>,
+                  value=frequency,
+		  gain=frequency*vibrato_depth,
+		  frequency=vibrato_frequency>>
+=instrument drv modulate<adsr, raw_drv>
+=beats 1000 90
+=macro base0 c.,,c...,,,,g,e,,g,e,,,,,,
+=macro base0a c.,,c...,,,,GRACE{c,} g,e,,g,GRACE{g,c,} e,,,_c^,,,
+=macro base0b c.,,GRACE{_g^,} c...,,,,GRACE{_c^,} g,e,,g,e,,,V-cV+,,,
+=macro base0c c.,,GRACE{_g^,e,} c...,,,,GRACE{_c^,^c_,} g,e,,g,e,,,V-cV+,,,
+=part instrument dr named aaa
+<commastep=0.25><notestep=0>
+___
+@base0
+@base0
+Ma
+@base0
+@base0
+<pitchshift=5> @base0
+<pitchshift=0> @base0b
+<pitchshift=-5> @base0a
+<pitchshift=0> @base0b
+<pitchshift=0> @base0
+<pitchshift=0> @base0b
+<pitchshift=0> @base0a
+<pitchshift=0> @base0b
+<pitchshift=0> @base0
+
+# each riff has 32 commas
+=macro riff0 c,,e.,,g,e.,c.a,a,g,e,c,,b,,,e,,c,e,a,,c,,e,a,c,e,a,c,,,e,
+=macro riff1 e,c,e,f,a,,e,,f,,ac,e,,f,,d,c,,e,c,,a,c...,a,a,d,f,,a,c,a,d,
+=macro riff2 a,c,e.,,_e^a.,^c_,a,,c,e,,c,a,,c,f,,e,,,a,c,e,,c,e,,,f,a,c,a,
+=part instrument drv at mark a named bbb
+<commastep=0.25><notestep=0> {duration=0.3b} {volume=0.2}
+{vibrato_depth=0.04} {vibrato_frequency=6.5}
+<gracetimescale=0.25>
+@riff0
+@riff0
+@riff1
+FADE{param=vibrato_depth, start_mark=a, start_value=0.04, end_value=0.08}
+Mb
+@riff1
+@riff0
+@riff2
+@riff0
+FADE{param=vibrato_depth, start_mark=b, start_value=0.08, end_value=0.02}
+FADE{param=volume, start_mark=a, start_value=0.2, end_value=0.6, interpolate=exponential}
+FADE{param=attack_time, start_mark=a, start_value=10%, end_value=5%}
+FADE{param=decay_time, start_mark=a, start_value=30%, end_value=0%}
+FADE{param=sustain_level, start_mark=a, start_value=0.5, end_value=0}
+Mc
+{attack_time=5%} {decay_time=0%} {sustain_level=0} {volume=0.6}
+@riff1
+@riff0
+@riff2
+Md
+@riff0
+FADE{param=decay_time, start_mark=b, start_value=0%, end_value=60%}
+=part instrument dr named ccc at mark d
+<commastep=0.25><notestep=0>
+__
+Md   {duration=1b} {volume=1.0} @base0b  @base0   @base0c  @base0a  @base0c  @base0b  @base0a  @base0 
+Jd _ {duration=2b} {volume=1.2} @base0a  @base0b  @base0   @base0   @base0c  @base0   @base0b  @base0 
+Jd _ {duration=4b} {volume=1.6} @base0c  @base0a  @base0b  @base0b  @base0   @base0   @base0c  @base0 
+^^

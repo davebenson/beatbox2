@@ -1,0 +1,17 @@
+=beats 100 90
+=part instrument fractal0
+{duration=0.01s} x
+{start_value=0.2} {factor=1.5} {duration=1.8b} <notestep=2>
+x
+{start_value=0.2} {factor=1.6} {duration=1.8b} <notestep=2>
+x
+{start_value=0.2} {factor=1.6} {duration=1.8b} <notestep=2>
+x
+{start_value=0.2} {factor=1.8} {duration=1.8b} <notestep=2>
+x
+
+=part instrument fractal1
+Ma
+{duration=1.8b} <notestep=2>
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FADE{start_mark=a, param=c, start_value=1, end_value=11}

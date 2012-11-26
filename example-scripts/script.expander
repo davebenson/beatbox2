@@ -1,0 +1,5 @@
+=instrument ee modulate<adsr, filter<gain<sin>, arctan_filter()>>
+=beats 100 90
+# =set gnuplot
+=part instrument ee
+{gain=3} e {gain=5} e {gain=10} e {gain=50} a.

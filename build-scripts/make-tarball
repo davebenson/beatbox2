@@ -1,0 +1,31 @@
+#! /bin/sh
+
+
+tag="$1"
+if test "x$tag" = x ; then
+  echo "usage: make-tarball TAG"
+  exit 1
+fi
+
+if test "x$tag" = x--date ; then
+  tag=`date +%Y%m%d`
+fi
+if test -z "$OUTPUT_DIR" ; then
+  OUTPUT_DIR=.
+fi
+
+pt=beatbox2-$tag
+rm -rf "$pt"
+mkdir -p .generated
+( for a in `find . -type d -name CVS` ; do
+    b=`echo $a | sed -e 's/\\/CVS$//' | sed -e 's/^\\.\\///'`
+    fd="$pt/$b"
+    mkdir -p $fd
+    grep -v \^D $a/Entries | cut -d / -f 2 | sed -e "s,^,$b/," 
+  done  ; ) > .generated/file-list
+for f in `cat .generated/file-list`; do
+  cp $f $pt/$f
+done
+tar czf "$OUTPUT_DIR/$pt.tar.gz" "$pt"
+rm -rf "$pt"
+echo "Generated $pt.tar.gz"

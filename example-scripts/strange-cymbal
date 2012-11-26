@@ -1,0 +1,6 @@
+=instrument nf param_map<noise_filterer, filter=square_filter(2)>
+=instrument m modulate<adsr, nf>
+=beats 100 90
+=part instrument nf
+<notestep=5> {duration=5beats} {prepasses=0} {repeat_count=60} {falloff=0.1} xx \
+{prepasses=1} xx {prepasses=2} x {prepasses=3} x {falloff=0.3} x {falloff=0.5} x

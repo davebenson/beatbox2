@@ -1,0 +1,47 @@
+=instrument r
+param_map<grain1,
+          param BbDuration nht secs 0.005,
+          noise_halflife_time=nht,
+          resonance_halflife_time=0.005s,
+          frequency=frequency*rand(0.99,1.01)>
+=instrument r2
+param_map<grain1, param gdouble frequency 1 20000 440,
+          param BbDuration nht secs 0.005,
+          noise_halflife_time=nht,
+          resonance_halflife_time=0.005s,
+          frequency=pick([1,frequency * 1.000,
+                          1,frequency * 1.189,
+			  1,frequency * 1.498])>
+=instrument rps
+normalize<
+filter<
+particle_system<param gdouble frequency 1 20000 440,
+                param BbDuration duration beats 1,
+		param BbDuration nht secs 0.005,
+		param gdouble bw 0.0001 10000 1,
+		param gdouble pfactor 0.01 100 1,
+                grain [param_map<gain<exp-decay>,gain=0.01*pfactor, halflife_time=5%>]
+		      r
+               >
+butterworth(BbButterworthMode::band_pass, frequency, bw, 10),
+butterworth(BbButterworthMode::band_pass, frequency, bw, 10),
+butterworth(BbButterworthMode::band_pass, frequency, bw, 10),
+butterworth(BbButterworthMode::band_pass, frequency, bw, 10)
+>
+>
+=beats 100 90
+=part instrument rps named a
+Ma
+{pfactor=1}
+<notestep=0><commastep=0.25> <pitchshift=1>
+#ec,eg,ec,ac,eg,,,e,,c,,a,c,a,e,,g,e,,c,,,e,ca,c,e,a,e,,g,e,ac,ea,ca,ec,ac,aec,ae,ca,d,,dc,a,ec,,
+<notestep=0.5>
+abcdefg
+abcdefg
+abcdefg
+abcdefg
+abcdefg
+abcdefg
+#FADE{start_mark=a, param=nht, start_value=0.001s, end_value=0.01s}
+#FADE{start_mark=a, param=pfactor, start_value=10, end_value=100, interpolate=exponential}
+FADE{start_mark=a, param=bw, start_value=0.01, end_value=100, interpolate=exponential}

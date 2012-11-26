@@ -1,0 +1,13 @@
+#define BB_TOKEN_TYPE_COMMA                           1
+#define BB_TOKEN_TYPE_PLUS                            2
+#define BB_TOKEN_TYPE_MINUS                           3
+#define BB_TOKEN_TYPE_TIMES                           4
+#define BB_TOKEN_TYPE_DIVIDE                          5
+#define BB_TOKEN_TYPE_COLONCOLON                      6
+#define BB_TOKEN_TYPE_LPAREN                          7
+#define BB_TOKEN_TYPE_RPAREN                          8
+#define BB_TOKEN_TYPE_NUMBER                          9
+#define BB_TOKEN_TYPE_BAREWORD                       10
+#define BB_TOKEN_TYPE_LBRACKET                       11
+#define BB_TOKEN_TYPE_RBRACKET                       12
+#define BB_TOKEN_TYPE_STRING_LITERAL                 13

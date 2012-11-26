@@ -1,0 +1,293 @@
+add(gdouble a, gdouble b) = (gdouble rv).
+{
+  rv = a + b;
+}
+sub(gdouble a, gdouble b) = (gdouble rv).
+{
+  rv = a - b;
+}
+mul(gdouble a, gdouble b) = (gdouble rv).
+{
+  rv = a * b;
+}
+mul(BbDuration a, gdouble b) = (BbDuration rv).
+{
+  rv.units = a.units;
+  rv.value = a.value * b;
+}
+mul(gdouble a, BbDuration b) = (BbDuration rv).
+{
+  rv.units = b.units;
+  rv.value = b.value * a;
+}
+div(gdouble a, gdouble b) = (gdouble rv).
+{
+  rv = a / b;
+}
+div(BbDuration a, gdouble b) = (BbDuration rv).
+{
+  rv.units = a.units;
+  rv.value = a.value / b;
+}
+neg(gdouble a) = (gdouble rv).
+{
+  rv = -a;
+}
+
+# UTILITY TYPES
+double_array(BbValueArray value_array) = (BbDoubleArray rv).
+{
+  guint n = value_array->n_values;
+  gdouble *t = g_new (gdouble, n);
+  guint i;
+  for (i = 0; i < n; i++)
+    {
+      GType vtype = G_VALUE_TYPE (&value_array->values[i]);
+      if (vtype == G_TYPE_DOUBLE)	/* TODO: support other types? */
+        {
+	  t[i] = g_value_get_double (&value_array->values[i]);
+	}
+      else
+        {
+	  g_set_error (error, BB_ERROR_DOMAIN_QUARK, BB_ERROR_INVALID_ARG,
+	               "double_array: element %u was of invalid type %s",
+		       i, g_type_name (vtype));
+          g_free (t);
+          CLEANUP ();
+	  return FALSE;
+        }
+    }
+  rv = bb_double_array_new (n, t);
+  g_free (t);
+}
+
+
+# RANDOM NUMBER GENERATORS
+rand() = (gdouble rv).
+{
+  rv = g_random_double ();
+}
+rand(gdouble max) = (gdouble rv).
+{
+  rv = g_random_double () * max;
+}
+rand(gdouble min, gdouble max) = (gdouble rv).
+{
+  rv = g_random_double_range (min, max);
+}
+
+# pick([weight0, value0,   weight1, value1, ...])
+# implement a discrete distribution.
+pick(BbValueArray weight_value_pairs) = (BbValue rv).
+{
+  guint n_elements = weight_value_pairs->n_values / 2;
+  GValue *wv_pairs = weight_value_pairs->values;
+  gdouble *cumulative_weights;
+  gdouble total_weight;
+  guint i;
+  guint choice;
+  gdouble picked_value;
+
+  /* ensure that weight_value_pairs is of even length */
+  if (weight_value_pairs->n_values % 2 == 1)
+    {
+      g_set_error (error, BB_ERROR_DOMAIN_QUARK, BB_ERROR_INVALID_ARG,
+                   "pick() must be given an array of even length");
+      CLEANUP();
+      return FALSE;
+    }
+  if (weight_value_pairs->n_values == 0)
+    {
+      g_set_error (error, BB_ERROR_DOMAIN_QUARK, BB_ERROR_INVALID_ARG,
+                   "pick() was passed an empty array");
+      CLEANUP();
+      return FALSE;
+    }
+
+  /* ensure that even elements are of type gdouble;
+     accumulate the counts. */
+  cumulative_weights = g_new (gdouble, n_elements);
+  total_weight = 0.0;
+  for (i = 0; i < n_elements; i++)
+    {
+      GValue *w_value = wv_pairs + 2 * i;
+      gdouble weight;
+      if (G_VALUE_TYPE (w_value) != G_TYPE_DOUBLE)
+        {
+	  g_set_error (error, BB_ERROR_DOMAIN_QUARK, BB_ERROR_INVALID_ARG,
+		       "pick() was passed an array whose %u element was of type %s instead of double",
+		       i, G_VALUE_TYPE_NAME (w_value));
+          g_free (cumulative_weights);
+	  CLEANUP();
+	  return FALSE;
+	}
+      weight = g_value_get_double (w_value);
+      g_assert (weight >= 0.0);
+      total_weight += weight;
+      cumulative_weights[i] = total_weight;
+    }
+  if (total_weight == 0.0)
+    {
+      g_message ("warning: pick() was passed an array with all zero weights");
+      choice = g_random_int_range (0, n_elements);
+      goto made_choice;
+    }
+  picked_value = g_random_double () * total_weight;
+  for (i = 0; i < n_elements; i++)
+    if (picked_value < cumulative_weights[i])
+      break;
+  g_assert (i < n_elements);
+  choice = i;
+
+made_choice:
+  g_free (cumulative_weights);
+  g_value_init (rv, G_VALUE_TYPE (&wv_pairs[2*choice+1]));
+  g_value_copy (&wv_pairs[2*choice+1], rv);
+}
+
+# WAVEFORMS
+triangle_waveform(gdouble low_value, gdouble high_value) = (BbWaveform rv).
+{
+  rv = bb_waveform_new_triangle (low_value, high_value);
+}
+
+semicircle_waveform() = (BbWaveform rv).
+{
+  rv = bb_waveform_new_semicircle ();
+}
+
+sin_envelope() = (BbWaveform rv).
+{
+  rv = bb_waveform_new_sin_envelope ();
+}
+
+linear_waveform(BbDoubleArray time_volume_pairs) = (BbWaveform rv).
+{
+  if (time_volume_pairs->n_values % 2 != 0)
+    {
+      g_set_error (error, BB_ERROR_DOMAIN_QUARK, BB_ERROR_INVALID_ARG,
+                   "time-value array must be of even-length");
+      CLEANUP ();
+      return FALSE;
+    }
+  rv = bb_waveform_new_linear (time_volume_pairs->n_values / 2,
+                               time_volume_pairs->values);
+}
+exp_waveform(BbDoubleArray tvt_data) = (BbWaveform rv).
+{
+  gdouble *tv_pairs, *transitions;
+  guint n_tv_pairs;
+  guint i;
+  if (tvt_data->n_values % 3 != 2)
+    {
+      g_set_error (error, BB_ERROR_DOMAIN_QUARK, BB_ERROR_INVALID_ARG,
+                   "time-value-transition array must be of length 2, mod 3");
+      CLEANUP ();
+      return FALSE;
+    }
+  n_tv_pairs = (tvt_data->n_values+1) / 3;
+  tv_pairs = g_newa (gdouble, n_tv_pairs * 2);
+  transitions = g_newa (gdouble, n_tv_pairs - 1);
+  for (i = 0; i + 1 < n_tv_pairs; i++)
+    {
+      tv_pairs[2*i+0] = tvt_data->values[3*i+0];
+      tv_pairs[2*i+1] = tvt_data->values[3*i+1];
+      transitions[i]  = tvt_data->values[3*i+2];
+   }
+  tv_pairs[2*i+0] = tvt_data->values[3*i+0];
+  tv_pairs[2*i+1] = tvt_data->values[3*i+1];
+  rv = bb_waveform_new_exp (n_tv_pairs, tv_pairs, transitions);
+}
+harmonic_waveform(gdouble start_val, gdouble end_val) = (BbWaveform rv).
+{
+  rv = bb_waveform_new_harmonic (start_val, end_val);
+}
+pow(gdouble a, gdouble b) = (gdouble rv).
+{
+  rv = pow(a,b);
+}
+
+# FILTER1S
+butterworth(BbButterworthMode mode, gdouble freq, gdouble bandwidth, gdouble db_gain) = (BbFilter1 rv).
+{
+  rv = bb_filter1_butterworth (mode, render_info->sampling_rate, freq, bandwidth, db_gain);
+}
+square_filter(gdouble n) = (BbFilter1 rv).
+{
+  rv = bb_filter1_new_square ((gint) n);
+}
+plucked_string_filter(gdouble frequency, gdouble falloff_per_beat) = (BbFilter1 rv).
+{
+  rv = bb_filter1_new_plucked_string(render_info->sampling_rate,
+                                     frequency, falloff_per_beat * render_info->beat_period,
+				     0.0);
+}
+plucked_string_filter(gdouble frequency, gdouble falloff_per_beat, gdouble b) = (BbFilter1 rv).
+{
+  rv = bb_filter1_new_plucked_string(render_info->sampling_rate,
+                                     frequency, falloff_per_beat * render_info->beat_period,
+				     b);
+}
+arctan_filter() = (BbFilter1 rv).
+{
+  rv = bb_filter1_new_arctan ();
+}
+cos_filter() = (BbFilter1 rv).
+{
+  rv = bb_filter1_new_cos ();
+}
+exp_filter() = (BbFilter1 rv).
+{
+  rv = bb_filter1_new_exp ();
+}
+ln_filter() = (BbFilter1 rv).
+{
+  rv = bb_filter1_new_ln ();
+}
+tan_filter() = (BbFilter1 rv).
+{
+  rv = bb_filter1_new_tan ();
+}
+log10_filter() = (BbFilter1 rv).
+{
+  rv = bb_filter1_new_log10 ();
+}
+gain_filter(gdouble value) = (BbFilter1 rv).
+{
+  rv = bb_filter1_new_gain (value);
+}
+pow_filter(gdouble value) = (BbFilter1 rv).
+{
+  rv = bb_filter1_new_pow_const (value);
+}
+add_dc_filter(gdouble value) = (BbFilter1 rv).
+{
+  rv = bb_filter1_new_add_dc (value);
+}
+two_zero_filter(gdouble x0, gdouble x1, gdouble x2) = (BbFilter1 rv).
+{
+  rv = bb_filter1_new_two_zero (x0,x1,x2);
+}
+fir_filter(BbDoubleArray arr) = (BbFilter1 rv).
+{
+  if (arr->n_values % 2 != 0)
+    {
+      g_set_error (error, BB_ERROR_DOMAIN_QUARK, BB_ERROR_INVALID_ARG,
+                   "fir filter constructor takes an array of doubles of even length");
+      CLEANUP ();
+      return FALSE;
+    }
+  rv = bb_filter1_new_linear (render_info->sampling_rate, arr->n_values / 2, arr->values, 0, NULL);
+}
+iir_filter(BbDoubleArray input_tv, BbDoubleArray output_tv) = (BbFilter1 rv).
+{
+  if (input_tv->n_values % 2 != 0
+   || output_tv->n_values % 2 != 0)
+    {
+      g_set_error (error, BB_ERROR_DOMAIN_QUARK, BB_ERROR_INVALID_ARG,
+                   "fir filter constructor takes two time-value pair arrays of doubles (one or both of them was not of even length)");
+      CLEANUP ();
+      return FALSE;
+    }
+  rv = bb_filter1_new_linear (render_info->sampling_rate, input_tv->n_values / 2, input_tv->values, output_tv->n_values / 2, output_tv->values);
+}

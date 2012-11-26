@@ -1,0 +1,34 @@
+=instrument env param_map<waveform,                                           \
+        waveform=linear_waveform(double_array([0.0, 0.0,         0.5,   1.0,  \
+                                               0.6, 0.5,         0.7,   1.0,  \
+					       0.8, 0.5,         1.0,   0.0 ]))>
+=instrument env2 param_map<waveform,                                          \
+        waveform=linear_waveform(double_array([0.0, 0.0,         0.1,   2.0,  \
+                                               0.2, 0.5,         0.5,   0.3,  \
+					       0.6, 1.0,         0.8,   0.5,  \
+					       0.9, 0.7,         1.0,   0.0 ]))>
+=instrument test modulate<sin, env>
+=instrument test2 modulate<sin, env2>
+=beats 100 90
+=part named foo instrument test
+abcdefg
+=part named foo instrument test2
+abcdefg
+=macro Z \
+{duration=0.25beats} cecegegecececgegegececegegea \
+,,,, \
+{duration=0.20beats} cecegegecececgegegececegegea \
+,,,, \
+{duration=0.15beats} cecegegecececgegegececegegea \
+,,,, \
+{duration=0.10beats} cecegegecececgegegececegegea \
+,,,, \
+{duration=0.05beats} cecegegecececgegegececegegea \
+,,,,,,,,,,,,,,,,
+=part instrument test2 
+___
+<notestep=0.25> <commastep=0.25> @Z 
+<notestep=0.35> <commastep=0.35> @Z 
+<notestep=0.45> <commastep=0.35> @Z 
+<notestep=0.55> <commastep=0.35> @Z 
+

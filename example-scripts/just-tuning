@@ -1,0 +1,13 @@
+=beats 100 90
+=instrument adsr_sin
+modulate<adsr, sin>
+=part instrument adsr_sin
+<tuning=just>
+<notestep=0><commastep=1>
+ce,cg,ceg,cea,cega,cegb-,cegb,eg^c_
+ce,cg,ceg,cea,cega,cegb-,cegb,eg^c_
+___
+<notestep=0><commastep=1>
+<tuning=equal>
+ce,cg,ceg,cea,cega,cegb-,cegb,eg^c_
+ce,cg,ceg,cea,cega,cegb-,cegb,eg^c_
